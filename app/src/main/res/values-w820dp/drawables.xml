@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="ic_new" type="drawable">@drawable/ic_new</item>
+    <item name="ic_mic" type="drawable">@drawable/ic_my_mic</item>
+    <item name="ic_mic_rec" type="drawable">@drawable/ic_my_mic_rec</item>
+    <item name="ic_camera" type="drawable">@drawable/ic_my_camera</item>
+    <item name="ic_text" type="drawable">@drawable/ic_text</item>
+    <item name="ic_upload" type="drawable">@drawable/ic_upload</item>
+</resources>
