@@ -6,29 +6,33 @@ import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Vibrator;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
+
 import android.widget.Toast;
 
+import com.example.dell.round3.Models.MyDataBase;
+import com.firebase.client.Firebase;
 import com.getbase.floatingactionbutton.FloatingActionButton;
+
 
 public class MainActivity extends AppCompatActivity {
 
     private AudioRecording audioRecording = new AudioRecording();
     private TakePicture takePicture;
     private String firebaseUrl = "https://proyecto-movil.firebaseio.com/";
-
+    private MyDataBase myDataBase;
     public MyMapFragment myMapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Firebase.setAndroidContext(this);
+
+        myDataBase = new MyDataBase(this);
 
         takePicture = new TakePicture(this);
 
@@ -85,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         buttonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                myMapFragment.sendCoordinates();
                 if (isConnectedViaWifi()) {
                     // Your code here
                     Toast.makeText(MainActivity.this, "Enviando...", Toast.LENGTH_SHORT).show();

@@ -4,6 +4,12 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
 
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE-FIREBASE.txt'
+        exclude 'META-INF/NOTICE'
+    }
+
     defaultConfig {
         applicationId "com.example.dell.round3"
         minSdkVersion 15
@@ -26,4 +32,5 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.google.android.gms:play-services-location:8.4.0'
     compile 'com.getbase:floatingactionbutton:1.10.1'
+    compile 'com.firebase:firebase-client-android:2.5.2'
 }
