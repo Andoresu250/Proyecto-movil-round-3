@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.dell.round3.Models.MyDataBase;
 import com.example.dell.round3.Models.TCoordinates;
+import com.example.dell.round3.Models.TMarkers;
 import com.firebase.client.Firebase;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -52,6 +53,7 @@ public class MyMapFragment extends MapFragment implements GoogleApiClient.Connec
     MyDataBase myDataBase;
     String firebaseUrl = "https://proyecto-movil.firebaseio.com/";
     Firebase root;
+
     //ACTIVITY PARAMS
     String activityName;
     float radius;
@@ -59,6 +61,8 @@ public class MyMapFragment extends MapFragment implements GoogleApiClient.Connec
     int userId;
     double activityLat;
     double activitylong;
+
+    String[] types = {"image","text","audio"};
 
 
 
@@ -100,6 +104,9 @@ public class MyMapFragment extends MapFragment implements GoogleApiClient.Connec
                 BitmapFactory.decodeResource(getResources(),
                         R.drawable.camera)));
         mGoogleMap.addMarker(options);
+        String token = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())+"";
+        TMarkers marker = new TMarkers(activityId,userId,(float)latLng.latitude,(float)latLng.longitude, token, types[0]);
+
     }
 
     public void setTextMarket() {
@@ -110,6 +117,8 @@ public class MyMapFragment extends MapFragment implements GoogleApiClient.Connec
                 BitmapFactory.decodeResource(getResources(),
                         R.drawable.message_text)));
         mGoogleMap.addMarker(options);
+        String token = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())+"";
+        TMarkers marker = new TMarkers(activityId,userId,(float)latLng.latitude,(float)latLng.longitude, token, types[1]);
     }
 
     public void setMicMarket() {
@@ -119,6 +128,9 @@ public class MyMapFragment extends MapFragment implements GoogleApiClient.Connec
                 BitmapFactory.decodeResource(getResources(),
                         R.drawable.microphone)));
         mGoogleMap.addMarker(options);
+        String token = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())+"";
+        TMarkers marker = new TMarkers(activityId,userId,(float)latLng.latitude,(float)latLng.longitude, token, types[2]);
+
     }
 
     @Override
@@ -260,6 +272,15 @@ public class MyMapFragment extends MapFragment implements GoogleApiClient.Connec
         postText.put("2", "vi un gato");
         postText.put("3", "pise mierda");
 
+        Map<String, String> postMarkers = new HashMap<String, String>();
+        ArrayList<TMarkers> markers;
+        for (String type: types) {
+            markers = myDataBase.getMarkets(activityId+"",userId+"",type);
+            for (TMarkers marker: markers) {
+                postMarkers.put(marker.getToken(),marker.toString());
+            }
+        }
+
         Firebase dataRef = dataActivityRef.push();
 
         Firebase coorRef = dataRef.child("coordinates");
@@ -273,7 +294,12 @@ public class MyMapFragment extends MapFragment implements GoogleApiClient.Connec
 
         Firebase textRef = dataRef.child("text");
         textRef.setValue(postText);
+
+        Firebase markersRef = dataRef.child("markers");
+        markersRef.setValue(postMarkers);
+
         myDataBase.deleteCoordinates();
+        myDataBase.deleteMarkers();
 
     }
 
