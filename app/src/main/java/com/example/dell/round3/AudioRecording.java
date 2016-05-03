@@ -4,6 +4,9 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Environment;
 
+import com.example.dell.round3.Models.MyDataBase;
+import com.example.dell.round3.Models.TFiles;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
@@ -15,12 +18,21 @@ public class AudioRecording implements Serializable {
     private MediaRecorder myAudioRecorder;
     private MediaPlayer mediaPlayer = null;
     private String outputFile = null;
+    private MyMapFragment myMapFragment = null;
+    private int activityId;
+    private int userId;
 
     private static final String AUDIO_RECORDER_FOLDER = "Proyecto/AudioRecorder";
     private static final String AUDIO_RECORDER_FILE_EXT = ".mp3";
 
     public AudioRecording() {
 
+    }
+
+    public AudioRecording(MyMapFragment myMapFragment, int activityId, int userId) {
+        this.myMapFragment = myMapFragment;
+        this.activityId = activityId;
+        this.userId = userId;
     }
 
     public void starRecording(){
@@ -45,6 +57,12 @@ public class AudioRecording implements Serializable {
             myAudioRecorder.stop();
             myAudioRecorder.release();
             myAudioRecorder  = null;
+            myMapFragment.setMicMarket();
+            String token = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())+"";
+            TFiles file = new TFiles(activityId,userId,outputFile ,token, "audio");
+            MyDataBase myDataBase = new MyDataBase(myMapFragment.getActivity().getApplicationContext());
+            myDataBase.insertFiles(file);
+            System.out.println(">>>> SE INSERTO UN AUDIO SUPUESTAMENTE");
         }
     }
 

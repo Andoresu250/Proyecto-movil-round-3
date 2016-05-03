@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:weightSum="1">
     <EditText
-        android:id="@+id/launch_codes"
+        android:id="@+id/text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="Describe lo que ves"

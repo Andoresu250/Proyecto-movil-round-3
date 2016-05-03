@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.dell.round3.Models.MyDataBase;
 import com.example.dell.round3.Models.TCoordinates;
+import com.example.dell.round3.Models.TFiles;
 import com.example.dell.round3.Models.TMarkers;
 import com.firebase.client.Firebase;
 import com.google.android.gms.common.ConnectionResult;
@@ -94,7 +95,6 @@ public class MyMapFragment extends MapFragment implements GoogleApiClient.Connec
                 .build();
         this.getMapAsync(this);
         myDataBase = new MyDataBase(getActivity().getApplicationContext());
-        //initListeners();
     }
 
     public void setCameraMarket() {
@@ -106,7 +106,7 @@ public class MyMapFragment extends MapFragment implements GoogleApiClient.Connec
         mGoogleMap.addMarker(options);
         String token = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())+"";
         TMarkers marker = new TMarkers(activityId,userId,(float)latLng.latitude,(float)latLng.longitude, token, types[0]);
-
+        myDataBase.insertMarkers(marker);
     }
 
     public void setTextMarket() {
@@ -119,6 +119,7 @@ public class MyMapFragment extends MapFragment implements GoogleApiClient.Connec
         mGoogleMap.addMarker(options);
         String token = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())+"";
         TMarkers marker = new TMarkers(activityId,userId,(float)latLng.latitude,(float)latLng.longitude, token, types[1]);
+        myDataBase.insertMarkers(marker);
     }
 
     public void setMicMarket() {
@@ -130,7 +131,7 @@ public class MyMapFragment extends MapFragment implements GoogleApiClient.Connec
         mGoogleMap.addMarker(options);
         String token = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())+"";
         TMarkers marker = new TMarkers(activityId,userId,(float)latLng.latitude,(float)latLng.longitude, token, types[2]);
-
+        myDataBase.insertMarkers(marker);
     }
 
     @Override
@@ -236,6 +237,12 @@ public class MyMapFragment extends MapFragment implements GoogleApiClient.Connec
 
     public void sendCoordinates(){
 
+        ArrayList<TFiles> myFiles = myDataBase.getAllFiles();
+        for(TFiles file : myFiles){
+            System.out.println(">>>>" + file.getFile());
+            System.out.println(">>>>" + file.getType());
+        }
+
         Firebase activityRef = root.child("activities").child(activityName);
         Firebase dataActivityRef = activityRef.child("data");
 
@@ -246,40 +253,41 @@ public class MyMapFragment extends MapFragment implements GoogleApiClient.Connec
         }
 
         Map<String, String> postImages = new HashMap<String, String>();
-        //ArrayList<TCoordinates> coordinates = myDataBase.getCoordinates(activityId+"",userId+"");
-        //for (TCoordinates coordinate: coordinates) {
-        //    postCoordinates.put(coordinate.getToken(),coordinate.toString());
-        //}
-        postImages.put("1", "url1");
-        postImages.put("2", "url2");
-        postImages.put("3", "url3");
-
-        Map<String, String> postAudios = new HashMap<String, String>();
-        //ArrayList<TCoordinates> coordinates = myDataBase.getCoordinates(activityId+"",userId+"");
-        //for (TCoordinates coordinate: coordinates) {
-        //    postCoordinates.put(coordinate.getToken(),coordinate.toString());
-        //}
-        postAudios.put("1", "url1");
-        postAudios.put("2", "url2");
-        postAudios.put("3", "url3");
-
-        Map<String, String> postText = new HashMap<String, String>();
-        //ArrayList<TCoordinates> coordinates = myDataBase.getCoordinates(activityId+"",userId+"");
-        //for (TCoordinates coordinate: coordinates) {
-        //    postCoordinates.put(coordinate.getToken(),coordinate.toString());
-        //}
-        postText.put("1", "Esto es un text 1");
-        postText.put("2", "vi un gato");
-        postText.put("3", "pise mierda");
-
-        Map<String, String> postMarkers = new HashMap<String, String>();
-        ArrayList<TMarkers> markers;
-        for (String type: types) {
-            markers = myDataBase.getMarkets(activityId+"",userId+"",type);
-            for (TMarkers marker: markers) {
-                postMarkers.put(marker.getToken(),marker.toString());
-            }
+        ArrayList<TFiles> images = myDataBase.getImages(activityId+"",userId+"");
+        for (TFiles file: images) {
+            postImages.put(file.getToken(),file.getFile());
         }
+        Map<String, String> postText = new HashMap<String, String>();
+        ArrayList<TFiles> text = myDataBase.getFiles(activityId+"",userId+"",types[1]);
+        for (TFiles file: text) {
+            postText.put(file.getToken(),file.getFile());
+        }
+        Map<String, String> postAudios = new HashMap<String, String>();
+        ArrayList<TFiles> audios = myDataBase.getAudios(activityId+"",userId+"");
+        for (TFiles file: audios) {
+            postAudios.put(file.getToken(),file.getFile());
+        }
+
+        ArrayList<TMarkers> markers;
+
+        Map<String, String> postMarkerImages = new HashMap<String, String>();
+        markers = myDataBase.getMarkets(activityId+"",userId+"", types[0]);
+        for (TMarkers marker: markers) {
+            postMarkerImages.put(marker.getToken(),marker.toString());
+        }
+
+        Map<String, String> postMarkerTexts = new HashMap<String, String>();
+        markers = myDataBase.getMarkets(activityId+"",userId+"", types[1]);
+        for (TMarkers marker: markers) {
+            postMarkerTexts.put(marker.getToken(),marker.toString());
+        }
+
+        Map<String, String> postMarkerAudios = new HashMap<String, String>();
+        markers = myDataBase.getMarkets(activityId+"",userId+"", types[2]);
+        for (TMarkers marker: markers) {
+            postMarkerAudios.put(marker.getToken(),marker.toString());
+        }
+
 
         Firebase dataRef = dataActivityRef.push();
 
@@ -295,11 +303,20 @@ public class MyMapFragment extends MapFragment implements GoogleApiClient.Connec
         Firebase textRef = dataRef.child("text");
         textRef.setValue(postText);
 
-        Firebase markersRef = dataRef.child("markers");
-        markersRef.setValue(postMarkers);
+        Firebase markersRef;
+        markersRef = dataRef.child("markers").child("images");
+        markersRef.setValue(postMarkerImages);
+
+        markersRef = dataRef.child("markers").child("texts");
+        markersRef.setValue(postMarkerTexts);
+
+        markersRef = dataRef.child("markers").child("audios");
+        markersRef.setValue(postMarkerAudios);
 
         myDataBase.deleteCoordinates();
         myDataBase.deleteMarkers();
+        myDataBase.deleteFiles();
+        getActivity().getApplication().deleteDatabase(myDataBase.getDatabaseName());
 
     }
 
