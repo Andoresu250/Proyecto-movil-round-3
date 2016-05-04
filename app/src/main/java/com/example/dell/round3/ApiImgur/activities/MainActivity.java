@@ -27,14 +27,14 @@ public class MainActivity extends AppCompatActivity {
       These annotations are for ButterKnife by Jake Wharton
       https://github.com/JakeWharton/butterknife
      */
-    @Bind(R.id.imageview)
+    /*@Bind(R.id.imageview)
     ImageView uploadImage;
     @Bind(R.id.editText_upload_title)
     EditText uploadTitle;
     @Bind(R.id.editText_upload_desc)
     EditText uploadDesc;
     @Bind(R.id.toolbar)
-    Toolbar toolbar;
+    Toolbar toolbar;*/
 
     private Upload upload; // Upload object containging image and meta data
     private File chosenFile; //chosen file from intent
@@ -43,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        //ButterKnife.bind(this);
 
-        setSupportActionBar(toolbar);
+
     }
 
     @Override
@@ -72,16 +72,16 @@ public class MainActivity extends AppCompatActivity {
                     Picasso is a wonderful image loading tool from square inc.
                     https://github.com/square/picasso
                  */
-        Picasso.with(getBaseContext())
+        /*Picasso.with(getBaseContext())
                 .load(chosenFile)
                 .placeholder(R.drawable.ic_photo_library_black)
                 .fit()
-                .into(uploadImage);
+                .into(uploadImage);*/
 
     }
 
 
-    @OnClick(R.id.imageview)
+    /*@OnClick(R.id.imageview)
     public void onChooseImage() {
         uploadDesc.clearFocus();
         uploadTitle.clearFocus();
@@ -98,17 +98,13 @@ public class MainActivity extends AppCompatActivity {
 
     @OnClick(R.id.fab)
     public void uploadImage() {
-    /*
-      Create the @Upload object
-     */
+
         if (chosenFile == null) return;
         createUpload(chosenFile);
 
-    /*
-      Start upload
-     */
+
         new UploadService(this).Execute(upload, new UiCallback());
-    }
+
 
     private void createUpload(File image) {
         upload = new Upload();
@@ -132,5 +128,5 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(findViewById(R.id.rootView), "No internet connection", Snackbar.LENGTH_SHORT).show();
             }
         }
-    }
+    }*/
 }

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class MyDataBase extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "my_tag_app";
-    private static final int SCHEME_VERSION = 4;
+    private static final int SCHEME_VERSION = 5;
     private SQLiteDatabase db;
 
     public MyDataBase(Context context) {
@@ -50,6 +50,12 @@ public class MyDataBase extends SQLiteOpenHelper {
         return values;
     }
 
+    private ContentValues generateValues(TImages image){
+        ContentValues values = new ContentValues();
+        values.put(TImages.FIELD_URL, image.getUrl());
+        return values;
+    }
+
     public void insertMarkers(TMarkers marker){
         db.execSQL(TMarkers.CREATE_DB_TABLE);
         db.insert(TMarkers.TABLE_NAME,null,generateValues(marker));
@@ -66,6 +72,12 @@ public class MyDataBase extends SQLiteOpenHelper {
         System.out.println(">>>> SE INSERTO UN ARCHIVO");
     }
 
+    public void insertImages(TImages image){
+        db.execSQL(TImages.CREATE_DB_TABLE);
+        db.insert(TImages.TABLE_NAME,null,generateValues(image));
+        System.out.println(">>>> SE INSERTO UN ARCHIVO");
+    }
+
     public void deleteCoordinates(){
         db.rawQuery("DROP TABLE IF EXISTS coordinates" ,null);
         db.rawQuery("DROP TABLE IF EXISTS " + TCoordinates.TABLE_NAME ,null);
@@ -77,6 +89,10 @@ public class MyDataBase extends SQLiteOpenHelper {
 
     public void deleteFiles(){
         db.rawQuery("DROP TABLE IF EXISTS " + TFiles.TABLE_NAME ,null);
+    }
+
+    public void deleteImages(){
+        db.rawQuery("DROP TABLE IF EXISTS " + TImages.TABLE_NAME ,null);
     }
 
     public ArrayList<TCoordinates> getCoordinates(String activityId, String userId){
@@ -204,6 +220,20 @@ public class MyDataBase extends SQLiteOpenHelper {
         return files;
     }
 
+    public ArrayList<TImages> getImagesUrl(){
+        ArrayList<TImages> images = new ArrayList<>();
+        Cursor c = db.rawQuery("SELECT * FROM " + TImages.TABLE_NAME
+                ,null);
+        if(c.moveToFirst()){
+            do{
+                TImages image = new TImages();
+                image.setId(c.getInt(0));
+                image.setUrl(c.getString(1));
+                images.add(image);
+            }while(c.moveToNext());
+        }
+        return images;
+    }
 
 
     @Override
@@ -212,9 +242,11 @@ public class MyDataBase extends SQLiteOpenHelper {
         db.execSQL(TCoordinates.CREATE_DB_TABLE);
         db.execSQL(TMarkers.CREATE_DB_TABLE);
         db.execSQL(TFiles.CREATE_DB_TABLE);
+        db.execSQL(TImages.CREATE_DB_TABLE);
         System.out.println(">>>>> "+ TCoordinates.CREATE_DB_TABLE);
         System.out.println(">>>>> "+ TMarkers.CREATE_DB_TABLE);
         System.out.println(">>>>> "+ TFiles.CREATE_DB_TABLE);
+        System.out.println(">>>>> "+ TImages.CREATE_DB_TABLE);
     }
 
     @Override
@@ -222,6 +254,7 @@ public class MyDataBase extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TCoordinates.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + TFiles.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + TMarkers.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TImages.TABLE_NAME);
         onCreate(db);
     }
 }
