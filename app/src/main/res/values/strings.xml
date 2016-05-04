@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Round 3</string>
     <string name="google_maps_key">AIzaSyD_f866n1ngYyXsS-ywviKPtnfiZuHG7Hw</string>
+    <string name="notification_fail">Envio Fallido...</string>
+    <string name="notification_share_link">Share link</string>
+    <string name="notifaction_success">Subida exitosa</string>
+    <string name="notification_progress">Enviando imagenes...</string>
 </resources>
