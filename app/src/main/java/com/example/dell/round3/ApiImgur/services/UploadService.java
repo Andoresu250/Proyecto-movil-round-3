@@ -12,8 +12,8 @@ import com.example.dell.round3.ApiImgur.imgurmodel.ImgurAPI;
 import com.example.dell.round3.ApiImgur.imgurmodel.Upload;
 import com.example.dell.round3.ApiImgur.utils.NetworkUtils;
 import com.example.dell.round3.Methods;
-import com.example.dell.round3.Models.MyDataBase;
-import com.example.dell.round3.Models.TImages;
+import com.example.dell.round3.LocalDataBase.MyDataBase;
+import com.example.dell.round3.LocalDataBase.TImages;
 import com.firebase.client.Firebase;
 
 import retrofit.Callback;

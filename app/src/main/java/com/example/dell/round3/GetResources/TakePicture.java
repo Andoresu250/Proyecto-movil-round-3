@@ -1,4 +1,4 @@
-package com.example.dell.round3;
+package com.example.dell.round3.GetResources;
 
 
 import android.app.Activity;
@@ -8,8 +8,8 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 
-import com.example.dell.round3.Models.MyDataBase;
-import com.example.dell.round3.Models.TFiles;
+import com.example.dell.round3.LocalDataBase.MyDataBase;
+import com.example.dell.round3.LocalDataBase.TFiles;
 
 import java.io.File;
 import java.io.IOException;

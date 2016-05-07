@@ -1,11 +1,12 @@
-package com.example.dell.round3;
+package com.example.dell.round3.GetResources;
 
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Environment;
 
-import com.example.dell.round3.Models.MyDataBase;
-import com.example.dell.round3.Models.TFiles;
+import com.example.dell.round3.LocalDataBase.MyDataBase;
+import com.example.dell.round3.LocalDataBase.TFiles;
+import com.example.dell.round3.Activity.Maps.MyMapFragment;
 
 import java.io.File;
 import java.io.IOException;

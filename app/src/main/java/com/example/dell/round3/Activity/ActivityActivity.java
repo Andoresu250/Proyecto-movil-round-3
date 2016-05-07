@@ -1,4 +1,4 @@
-package com.example.dell.round3;
+package com.example.dell.round3.Activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,37 +14,39 @@ import android.provider.MediaStore;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 
 import android.widget.Toast;
 
+import com.example.dell.round3.Activity.Maps.MyMapFragment;
 import com.example.dell.round3.ApiImgur.imgurmodel.ImageResponse;
 import com.example.dell.round3.ApiImgur.imgurmodel.Upload;
 import com.example.dell.round3.ApiImgur.services.UploadService;
-import com.example.dell.round3.Models.MyDataBase;
-import com.example.dell.round3.Models.TCoordinates;
-import com.example.dell.round3.Models.TFiles;
-import com.example.dell.round3.Models.TMarkers;
-import com.firebase.client.DataSnapshot;
+import com.example.dell.round3.Dialogs.MyAlertDialog;
+import com.example.dell.round3.FirebaseModels.Activity;
+import com.example.dell.round3.FirebaseModels.Marker;
+import com.example.dell.round3.FirebaseModels.Submit;
+import com.example.dell.round3.GetResources.AudioRecording;
+import com.example.dell.round3.GetResources.TakePicture;
+import com.example.dell.round3.Dialogs.TextDialog;
+import com.example.dell.round3.LocalDataBase.MyDataBase;
+import com.example.dell.round3.LocalDataBase.TFiles;
+import com.example.dell.round3.R;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class ActivityActivity extends AppCompatActivity {
 
     private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 0;
     private AudioRecording audioRecording;
@@ -66,31 +68,42 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_activity);
         Firebase.setAndroidContext(this);
         root = new Firebase("https://proyecto-movil.firebaseio.com/");
-        Map<String, String> asd = new HashMap<>();
-        asd.put("hola",":v");
-        Firebase asd2 = root.push();
-        asd2.setValue(asd);
-        asd2.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d("asd",dataSnapshot.getRef().toString());
-                Log.d("asd",dataSnapshot.getValue().toString());
-            }
 
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
+        Firebase activituesRef = root.child("activies");
+        HashMap<String,Activity> activitiesList = new HashMap<>();
 
-            }
-        });
         activityName = "test";
         radius = 10;
         activityId = 1;
         userId = 1;
         activityLat = 0;
         activitylong = 0;
+
+        ArrayList<String> coordinates = new ArrayList<>();
+        coordinates.add("1,0");
+        coordinates.add("3,9");
+        coordinates.add("1,5");
+        coordinates.add("4,2");
+
+        ArrayList<Marker> markers = new ArrayList<>();
+        markers.add(new Marker("images", coordinates));
+        markers.add(new Marker("audios", coordinates));
+        markers.add(new Marker("texts", coordinates));
+
+
+        Activity activity = new Activity(activityName, activityId, activityLat, activitylong, radius);
+        Submit submit = new Submit();
+        submit.setCoordinates(coordinates);
+        submit.setMarkers(markers);
+        submit.setStudentId(2);
+        ArrayList<Submit> submits = new ArrayList<>();
+        submits.add(submit);
+        activity.setSubmits(submits);
+        activitiesList.put(activityName,activity);
+        activituesRef.setValue(activitiesList);
 
         myDataBase = new MyDataBase(this);
 
@@ -107,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     // startRecording();
-                    Vibrator v = (Vibrator) MainActivity.this.getSystemService(Context.VIBRATOR_SERVICE);
+                    Vibrator v = (Vibrator) ActivityActivity.this.getSystemService(Context.VIBRATOR_SERVICE);
                     v.vibrate(100);
                     Handler h = new Handler();
                     h.postDelayed(new Runnable(){@Override public void run(){}}, 100);
@@ -116,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                     audioRecording.starRecording();
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_UP
                         || motionEvent.getAction() == MotionEvent.ACTION_CANCEL) {
-                    Toast.makeText(MainActivity.this, "Grabado finalizado", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ActivityActivity.this, "Grabado finalizado", Toast.LENGTH_SHORT).show();
                     buttonRecord.setTitle("Manten presionado para grabar");
                     buttonRecord.setIcon(R.drawable.ic_my_mic);
                     //stop
@@ -152,16 +165,16 @@ public class MainActivity extends AppCompatActivity {
         buttonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!isConnectedViaWifi()) {
+                if (isConnectedViaWifi()) {
                     // Your code here
-                    Toast.makeText(MainActivity.this, "Enviando...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ActivityActivity.this, "Enviando...", Toast.LENGTH_SHORT).show();
                     ArrayList<Upload> uploads = new ArrayList<Upload>();
                     ArrayList<TFiles> images = myDataBase.getImages(activityId+"",userId+"");
                     for (TFiles image: images) {
                         uploads.add(new Upload(new File(image.getFile())));
                     }
                     String[] types = {"image","text","audio"};
-                    new UploadService(MainActivity.this).Execute(uploads, new UiCallback(),MainActivity.this,root,types,activityName,activityId,userId);
+                    new UploadService(ActivityActivity.this).Execute(uploads, new UiCallback(),ActivityActivity.this,root,types,activityName,activityId,userId);
 
                 }else{
                     DialogFragment dialog = new MyAlertDialog();
@@ -208,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
         public void failure(RetrofitError error) {
             //Assume we have no connection, since error is null
             if (error == null) {
-                Toast.makeText(MainActivity.this, "Error en la coneccion", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ActivityActivity.this, "Error en la coneccion", Toast.LENGTH_SHORT).show();
             }
         }
 

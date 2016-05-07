@@ -5,4 +5,5 @@
     <string name="notification_share_link">Share link</string>
     <string name="notifaction_success">Subida exitosa</string>
     <string name="notification_progress">Enviando imagenes...</string>
+    <string name="title_activity_activities">ActivitiesActivity</string>
 </resources>

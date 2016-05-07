@@ -1,4 +1,4 @@
-package com.example.dell.round3;
+package com.example.dell.round3.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

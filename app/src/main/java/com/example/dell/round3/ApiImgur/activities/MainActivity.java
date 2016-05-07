@@ -4,21 +4,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.widget.EditText;
-import android.widget.ImageView;
 
 import java.io.File;
 
 import com.example.dell.round3.R;
 import com.example.dell.round3.ApiImgur.helpers.DocumentHelper;
 import com.example.dell.round3.ApiImgur.helpers.IntentHelper;
-import com.example.dell.round3.ApiImgur.imgurmodel.ImageResponse;
 import com.example.dell.round3.ApiImgur.imgurmodel.Upload;
-import com.example.dell.round3.ApiImgur.services.UploadService;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity {
     public final static String TAG = MainActivity.class.getSimpleName();
@@ -42,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_activity);
         //ButterKnife.bind(this);
 
 

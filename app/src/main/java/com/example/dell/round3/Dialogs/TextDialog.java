@@ -1,18 +1,19 @@
-package com.example.dell.round3;
+package com.example.dell.round3.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.dell.round3.Models.MyDataBase;
-import com.example.dell.round3.Models.TFiles;
+import com.example.dell.round3.LocalDataBase.MyDataBase;
+import com.example.dell.round3.LocalDataBase.TFiles;
+import com.example.dell.round3.Activity.Maps.MyMapFragment;
+import com.example.dell.round3.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

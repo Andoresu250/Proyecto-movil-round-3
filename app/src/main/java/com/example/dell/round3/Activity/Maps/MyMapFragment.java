@@ -1,4 +1,4 @@
-package com.example.dell.round3;
+package com.example.dell.round3.Activity.Maps;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -10,10 +10,10 @@ import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.dell.round3.Models.MyDataBase;
-import com.example.dell.round3.Models.TCoordinates;
-import com.example.dell.round3.Models.TFiles;
-import com.example.dell.round3.Models.TMarkers;
+import com.example.dell.round3.LocalDataBase.MyDataBase;
+import com.example.dell.round3.LocalDataBase.TCoordinates;
+import com.example.dell.round3.LocalDataBase.TMarkers;
+import com.example.dell.round3.R;
 import com.firebase.client.Firebase;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -34,8 +34,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MyMapFragment extends MapFragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,

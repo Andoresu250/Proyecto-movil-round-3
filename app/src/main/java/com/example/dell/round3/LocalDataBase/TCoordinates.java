@@ -1,4 +1,4 @@
-package com.example.dell.round3.Models;
+package com.example.dell.round3.LocalDataBase;
 
 public class TCoordinates {
     public static final String TABLE_NAME = "map_coordinates";

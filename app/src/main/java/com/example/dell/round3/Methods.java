@@ -4,11 +4,11 @@ package com.example.dell.round3;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.example.dell.round3.Models.MyDataBase;
-import com.example.dell.round3.Models.TCoordinates;
-import com.example.dell.round3.Models.TFiles;
-import com.example.dell.round3.Models.TImages;
-import com.example.dell.round3.Models.TMarkers;
+import com.example.dell.round3.LocalDataBase.MyDataBase;
+import com.example.dell.round3.LocalDataBase.TCoordinates;
+import com.example.dell.round3.LocalDataBase.TFiles;
+import com.example.dell.round3.LocalDataBase.TImages;
+import com.example.dell.round3.LocalDataBase.TMarkers;
 import com.firebase.client.Firebase;
 
 import java.util.ArrayList;
