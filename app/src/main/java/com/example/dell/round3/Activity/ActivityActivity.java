@@ -82,29 +82,6 @@ public class ActivityActivity extends AppCompatActivity {
         activityLat = 0;
         activitylong = 0;
 
-        ArrayList<String> coordinates = new ArrayList<>();
-        coordinates.add("1,0");
-        coordinates.add("3,9");
-        coordinates.add("1,5");
-        coordinates.add("4,2");
-
-        ArrayList<Marker> markers = new ArrayList<>();
-        markers.add(new Marker("images", coordinates));
-        markers.add(new Marker("audios", coordinates));
-        markers.add(new Marker("texts", coordinates));
-
-
-        Activity activity = new Activity(activityName, activityId, activityLat, activitylong, radius);
-        Submit submit = new Submit();
-        submit.setCoordinates(coordinates);
-        submit.setMarkers(markers);
-        submit.setStudentId(2);
-        ArrayList<Submit> submits = new ArrayList<>();
-        submits.add(submit);
-        activity.setSubmits(submits);
-        activitiesList.put(activityName,activity);
-        activituesRef.setValue(activitiesList);
-
         myDataBase = new MyDataBase(this);
 
         takePicture = new TakePicture(this, activityId, userId);

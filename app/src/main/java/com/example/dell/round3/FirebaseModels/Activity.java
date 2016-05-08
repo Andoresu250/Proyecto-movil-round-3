@@ -5,22 +5,30 @@ import java.util.ArrayList;
 
 public class Activity {
     String name;
-    int id;
     double latitude;
     double longitude;
     double radius;
+    String note;
     ArrayList<Submit> submits;
 
 
-    public Activity(String name, int id, double latitude, double longitude, double radius) {
+    public Activity(String name, double latitude, double longitude, double radius, String note) {
         this.name = name;
-        this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
         this.radius = radius;
+        this.note = note;
     }
 
     public Activity() {
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public String getName() {
@@ -29,14 +37,6 @@ public class Activity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public double getLatitude() {

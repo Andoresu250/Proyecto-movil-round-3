@@ -14,16 +14,15 @@
         android:layout_height="match_parent"
         android:name="com.example.dell.round3.Activity.Maps.NewActivityMap"
         android:id="@+id/newMap"
-        android:layout_above="@+id/editText" />
+        android:layout_above="@+id/activityNameet" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:text=""
         android:hint="Nombre de la actividad"
         android:ems="10"
-        android:id="@+id/editText"
+        android:id="@+id/activityNameet"
         android:layout_marginBottom="124dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
@@ -39,8 +38,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/editText"
-        android:layout_alignEnd="@+id/editText" />
+        android:layout_alignRight="@+id/activityNameet"
+        android:layout_alignEnd="@+id/activityNameet" />
 
     <SeekBar
         android:layout_width="wrap_content"

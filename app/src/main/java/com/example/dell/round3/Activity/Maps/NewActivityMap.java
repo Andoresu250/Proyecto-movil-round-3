@@ -3,6 +3,7 @@ package com.example.dell.round3.Activity.Maps;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,6 +30,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+
 
 public class NewActivityMap extends MapFragment implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
@@ -51,7 +54,7 @@ public class NewActivityMap extends MapFragment implements GoogleApiClient.Conne
     GoogleMap mGoogleMap;
     String firebaseUrl = "https://proyecto-movil.firebaseio.com/";
     Firebase root;
-    LatLng markLatLng;
+    public LatLng markLatLng;
 
     private void initListeners() {
         mGoogleMap.setOnMarkerClickListener(this);
@@ -64,7 +67,7 @@ public class NewActivityMap extends MapFragment implements GoogleApiClient.Conne
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
+
             return;
         }
         mGoogleMap.setMyLocationEnabled(false);
@@ -95,7 +98,7 @@ public class NewActivityMap extends MapFragment implements GoogleApiClient.Conne
 
         mGoogleMap.setMapType(MAP_TYPES[curMapTypeIndex]);
         if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
+
             return;
         }
         mGoogleMap.setMyLocationEnabled(false);
@@ -119,7 +122,6 @@ public class NewActivityMap extends MapFragment implements GoogleApiClient.Conne
     public void onConnected(Bundle bundle) {
 
         if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
             return;
         }
         Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
@@ -129,6 +131,20 @@ public class NewActivityMap extends MapFragment implements GoogleApiClient.Conne
             latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
             initCamera(mLastLocation);
         }
+    }
+
+    public String getAddressFromLatLng( LatLng latLng ) {
+        Geocoder geocoder = new Geocoder( getActivity() );
+
+        String address = "";
+        try {
+            address = geocoder
+                    .getFromLocation( latLng.latitude, latLng.longitude, 1 )
+                    .get( 0 ).getAddressLine( 0 );
+        } catch (IOException e ) {
+        }
+
+        return address;
     }
 
     @Override

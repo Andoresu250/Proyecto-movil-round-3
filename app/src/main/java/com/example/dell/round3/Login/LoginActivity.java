@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.dell.round3.Activity.ActivitiesActivity;
 import com.example.dell.round3.Activity.NewActivity;
 import com.example.dell.round3.R;
 import com.firebase.client.DataSnapshot;
@@ -52,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
                 // ESTE IF ES EN CASO, DE QUE EL DATASNAPSHOT SEA NULL ES PORQUE EL USUARIO NO EXISTE
                 if (dataSnapshot.getValue() != null) {
 
-                    //TODO ESTOS HACE PARTE DE LA DESCODIFICACION DE LA PASSWORD, SI ENTRA AL IF ES PORQUE EL USUARIO
+                    //tod ESTOS HACE PARTE DE LA DESCODIFICACION DE LA PASSWORD, SI ENTRA AL IF ES PORQUE EL USUARIO
                     // EXISTE
                     byte[] data = Base64.decode(dataSnapshot.child("Password").getValue().toString(), Base64.DEFAULT);
                     try {
@@ -104,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void start(){
-        Intent i = new Intent(this, NewActivity.class);
+        Intent i = new Intent(this, ActivitiesActivity.class);
         startActivity(i);
     }
 }

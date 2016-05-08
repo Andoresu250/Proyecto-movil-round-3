@@ -136,7 +136,7 @@ public class MyMapFragment extends MapFragment implements GoogleApiClient.Connec
     public void onConnected(Bundle bundle) {
         Toast.makeText(getActivity().getApplicationContext(), "Conectado", Toast.LENGTH_SHORT).show();
         if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
+
             return;
         }
         Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
@@ -169,7 +169,7 @@ public class MyMapFragment extends MapFragment implements GoogleApiClient.Connec
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
+
             return;
         }
         mGoogleMap.setMyLocationEnabled(true);
@@ -227,7 +227,7 @@ public class MyMapFragment extends MapFragment implements GoogleApiClient.Connec
 
         mGoogleMap.setMapType(MAP_TYPES[curMapTypeIndex]);
         if (ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
+
             return;
         }
         mGoogleMap.setMyLocationEnabled(true);
