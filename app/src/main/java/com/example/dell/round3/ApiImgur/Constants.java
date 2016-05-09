@@ -1,8 +1,5 @@
 package com.example.dell.round3.ApiImgur;
 
-/**
- * Created by AKiniyalocts on 2/23/15.
- */
 public class Constants {
     /*
       Logging flag

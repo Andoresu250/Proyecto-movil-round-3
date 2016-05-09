@@ -63,6 +63,20 @@ public class DataBase extends SQLiteOpenHelper {
         return coordinates;
     }
 
+    public ArrayList<String> getCoordinatesString(String activityName, String UserName){
+        ArrayList<String> coordinates = new ArrayList<>();
+        String query = "SELECT * FROM " + TCoordinates.TABLE_NAME + " WHERE " +
+                TCoordinates.FIELD_ACTIVITY_NAME + " = " + "'" + activityName + "'" + " AND " +
+                TCoordinates.FIELD_USER_NAME + " = " + "'" + UserName + "'";
+        Cursor c = db.rawQuery(query ,null);
+        if (c.moveToFirst()){
+            do {
+                coordinates.add(c.getString(2));
+            }while (c.moveToNext());
+        }
+        return coordinates;
+    }
+
     public ArrayList<TData> getImagesMarker(String activityName, String UserName){
         ArrayList<TData> datas = new ArrayList<>();
         String query = "SELECT * FROM " + TData.TABLE_NAME + " WHERE " +
@@ -147,6 +161,22 @@ public class DataBase extends SQLiteOpenHelper {
         return datas;
     }
 
+    public ArrayList<String> getAudiosUrlString(String activityName, String UserName){
+        ArrayList<String> datas = new ArrayList<>();
+        String query = "SELECT * FROM " + TData.TABLE_NAME + " WHERE " +
+                TData.FIELD_ACTIVITY_NAME + " = " + "'" + activityName + "'" + " AND " +
+                TData.FIELD_USER_NAME + " = " + "'" + UserName + "'" + " AND " +
+                TData.FIELD_TYPE + " = " + "'audio'"
+                ;
+        Cursor c = db.rawQuery(query,null);
+        if (c.moveToFirst()){
+            do {
+                datas.add(c.getString(2));
+            }while (c.moveToNext());
+        }
+        return datas;
+    }
+
     public ArrayList<TData> getImagesUrl(String activityName, String UserName){
         ArrayList<TData> datas = new ArrayList<>();
         String query = "SELECT * FROM " + TData.TABLE_NAME + " WHERE " +
@@ -168,7 +198,23 @@ public class DataBase extends SQLiteOpenHelper {
         return datas;
     }
 
-    public ArrayList<TData> getText(String activityName, String UserName){
+    public ArrayList<String> getImagesUrlString(String activityName, String UserName){
+        ArrayList<String> datas = new ArrayList<>();
+        String query = "SELECT * FROM " + TData.TABLE_NAME + " WHERE " +
+                TData.FIELD_ACTIVITY_NAME + " = " + "'" + activityName + "'" + " AND " +
+                TData.FIELD_USER_NAME + " = " + "'" + UserName + "'" + " AND " +
+                TData.FIELD_TYPE + " = " + "'image'"
+                ;
+        Cursor c = db.rawQuery(query,null);
+        if (c.moveToFirst()){
+            do {
+                datas.add(c.getString(2));
+            }while (c.moveToNext());
+        }
+        return datas;
+    }
+
+    public ArrayList<TData> getTexts(String activityName, String UserName){
         ArrayList<TData> datas = new ArrayList<>();
         String query = "SELECT * FROM " + TData.TABLE_NAME + " WHERE " +
                 TData.FIELD_ACTIVITY_NAME + " = " + "'" + activityName + "'" + " AND " +
@@ -184,6 +230,22 @@ public class DataBase extends SQLiteOpenHelper {
                 data.setValue(c.getString(2));
                 data.setType(c.getString(3));
                 datas.add(data);
+            }while (c.moveToNext());
+        }
+        return datas;
+    }
+
+    public ArrayList<String> getTextsString(String activityName, String UserName){
+        ArrayList<String> datas = new ArrayList<>();
+        String query = "SELECT * FROM " + TData.TABLE_NAME + " WHERE " +
+                TData.FIELD_ACTIVITY_NAME + " = " + "'" + activityName + "'" + " AND " +
+                TData.FIELD_USER_NAME + " = " + "'" + UserName + "'" + " AND " +
+                TData.FIELD_TYPE + " = " + "'text'"
+                ;
+        Cursor c = db.rawQuery(query,null);
+        if (c.moveToFirst()){
+            do {
+                datas.add(c.getString(2));
             }while (c.moveToNext());
         }
         return datas;

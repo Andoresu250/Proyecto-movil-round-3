@@ -8,27 +8,25 @@ public class Submit {
     ArrayList<String> audios;
     ArrayList<String> texts;
     ArrayList<Marker> markers;
-    int studentId;
+    String studentName;
 
-    public Submit(ArrayList<String> coordinates, ArrayList<String> images, ArrayList<String> audios, ArrayList<String> texts, ArrayList<Marker> markers, int studentId) {
+    public Submit(ArrayList<String> coordinates, ArrayList<String> images, ArrayList<String> audios, ArrayList<String> texts, ArrayList<Marker> markers, String studentName) {
         this.coordinates = coordinates;
         this.images = images;
         this.audios = audios;
         this.texts = texts;
         this.markers = markers;
-        this.studentId = studentId;
+        this.studentName = studentName;
     }
 
     public Submit() {
 
     }
 
-    public int getStudentId() {
-        return studentId;
-    }
+    public String studentName() { return studentName; }
 
-    public void setStudentId(int studentId) {
-        this.studentId = studentId;
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
     }
 
     public ArrayList<String> getCoordinates() {

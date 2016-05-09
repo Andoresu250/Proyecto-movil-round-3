@@ -23,18 +23,26 @@ import android.widget.Toast;
 import com.example.dell.round3.Activity.Maps.ActivityMapFragment;
 import com.example.dell.round3.ApiImgur.imgurmodel.ImageResponse;
 import com.example.dell.round3.ApiImgur.imgurmodel.Upload;
+import com.example.dell.round3.ApiImgur.services.UploadService;
 import com.example.dell.round3.DB.DataBase;
+import com.example.dell.round3.DB.TCoordinates;
+import com.example.dell.round3.DB.TData;
 import com.example.dell.round3.Dialogs.MyAlertDialog;
 import com.example.dell.round3.FirebaseModels.Activity;
+import com.example.dell.round3.FirebaseModels.Marker;
+import com.example.dell.round3.FirebaseModels.Submit;
 import com.example.dell.round3.GetResources.AudioRecording;
 import com.example.dell.round3.GetResources.TakePicture;
 import com.example.dell.round3.Dialogs.TextDialog;
+import com.example.dell.round3.Login.CurrentUser;
 import com.example.dell.round3.R;
 import com.firebase.client.Firebase;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -48,6 +56,7 @@ public class ActivityActivity extends AppCompatActivity {
     private String firebaseUrl = "https://proyecto-movil.firebaseio.com/";
     private Firebase root;
     private DataBase db;
+    private CurrentUser user;
     public ActivityMapFragment activityMapFragment;
 
     //ACTIVITY PARAMS
@@ -58,8 +67,8 @@ public class ActivityActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity);
         Firebase.setAndroidContext(this);
-        root = new Firebase("https://proyecto-movil.firebaseio.com/");
-
+        root = new Firebase(firebaseUrl);
+        user = new CurrentUser(this);
         activity = (Activity) getIntent().getSerializableExtra("activity");
 
         activityMapFragment = (ActivityMapFragment) getFragmentManager().findFragmentById(R.id.map);
@@ -124,15 +133,11 @@ public class ActivityActivity extends AppCompatActivity {
                 if (isConnectedViaWifi()) {
                     // Your code here
                     Toast.makeText(ActivityActivity.this, "Enviando...", Toast.LENGTH_SHORT).show();
-                    ArrayList<Upload> uploads = new ArrayList<Upload>();
-                    //TODO: colocar la subida de imagenes y modificarla a como toque
-                    /*ArrayList<TFiles> images = myDataBase.getImages(activityId+"",userId+"");
-                    for (TFiles image: images) {
-                        uploads.add(new Upload(new File(image.getFile())));
+                    Firebase submitRef = sendActivity();
+                    ArrayList<String> images = db.getImagesUrlString(activity.getName(),user.getName());
+                    for (int i = 0; i < images.size() ; i++) {
+                        new UploadService(ActivityActivity.this).Execute(new Upload(new File(images.get(i))),new UiCallback(),submitRef,i);
                     }
-                    String[] types = {"image","text","audio"};
-                    new UploadService(ActivityActivity.this).Execute(uploads, new UiCallback(),ActivityActivity.this,root,types,activity);*/
-
                 }else{
                     DialogFragment dialog = new MyAlertDialog();
                     dialog.show(getSupportFragmentManager(), "dialog");
@@ -188,6 +193,42 @@ public class ActivityActivity extends AppCompatActivity {
         }
     }
 
+    private Firebase sendActivity(){
 
+        Firebase submitRef = root.child("activities").child(activity.getName()).child("submits");
 
+        Submit submit = new Submit();
+
+        ArrayList<TData> imagesM = db.getImagesMarker(activity.getName(),user.getName());
+        ArrayList<TData> audiosM = db.getImagesMarker(activity.getName(),user.getName());
+        ArrayList<TData> textsM = db.getImagesMarker(activity.getName(),user.getName());
+
+        ArrayList<Marker> markers = new ArrayList<>();
+        for (TData imageM : imagesM){
+            markers.add(new Marker("image",imageM.getValue()));
+        }
+        for (TData audioM : audiosM){
+            markers.add(new Marker("audio",audioM.getValue()));
+        }
+        for (TData textM : textsM){
+            markers.add(new Marker("text",textM.getValue()));
+        }
+
+        ArrayList<String> coordinates = db.getCoordinatesString(activity.getName(),user.getName());
+        //ArrayList<String> imagesUrl = db.getImagesUrlString(activity.getName(), user.getName());
+        ArrayList<String> audiosUrl = db.getAudiosUrlString(activity.getName(), user.getName());
+        ArrayList<String> texts = db.getTextsString(activity.getName(), user.getName());
+
+        submit.setMarkers(markers);
+        submit.setCoordinates(coordinates);
+        //submit.setImages(imagesUrl);
+        submit.setAudios(audiosUrl);
+        submit.setTexts(texts);
+        submit.setStudentName(user.getName());
+
+        Firebase finalRef = submitRef.push();
+        finalRef.setValue(submit);
+        return finalRef;
+
+    }
 }

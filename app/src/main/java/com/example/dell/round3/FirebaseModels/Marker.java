@@ -1,16 +1,13 @@
 package com.example.dell.round3.FirebaseModels;
 
-
-import java.util.ArrayList;
-
 public class Marker {
 
     String type;
-    ArrayList<String>  coordinates;
+    String  coordinate;
 
-    public Marker(String type, ArrayList<String> coordinates) {
+    public Marker(String type, String coordinate) {
         this.type = type;
-        this.coordinates = coordinates;
+        this.coordinate = coordinate;
     }
 
     public Marker() {
@@ -25,11 +22,11 @@ public class Marker {
         this.type = type;
     }
 
-    public ArrayList<String> getCoordinates() {
-        return coordinates;
+    public String getCoordinate() {
+        return coordinate;
     }
 
-    public void setCoordinates(ArrayList<String> coordinates) {
-        this.coordinates = coordinates;
+    public void setCoordinate(String coordinate) {
+        this.coordinate = coordinate;
     }
 }

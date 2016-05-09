@@ -3,7 +3,7 @@ package com.example.dell.round3.ApiImgur.services;
 import android.content.Context;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.example.dell.round3.ApiImgur.Constants;
 import com.example.dell.round3.ApiImgur.helpers.NotificationHelper;
@@ -11,7 +11,6 @@ import com.example.dell.round3.ApiImgur.imgurmodel.ImageResponse;
 import com.example.dell.round3.ApiImgur.imgurmodel.ImgurAPI;
 import com.example.dell.round3.ApiImgur.imgurmodel.Upload;
 import com.example.dell.round3.ApiImgur.utils.NetworkUtils;
-import com.example.dell.round3.FirebaseModels.Activity;
 import com.firebase.client.Firebase;
 
 import retrofit.Callback;
@@ -31,7 +30,7 @@ public class UploadService {
         this.context = context;
     }
 
-    public void Execute(Upload upload, Callback<ImageResponse> callback) {
+    public void Execute(Upload upload, Callback<ImageResponse> callback, final Firebase ref, final int i) {
         final Callback<ImageResponse> cb = callback;
 
         if (!NetworkUtils.isConnected(mContext.get())) {
@@ -68,6 +67,8 @@ public class UploadService {
                         */
                         if (imageResponse.success) {
                             notificationHelper.createUploadedNotification(imageResponse);
+                            Firebase imageRef = ref.child("images");
+                            imageRef.child(i+"").setValue(imageResponse.data.link);
                         }
                     }
 
@@ -78,63 +79,6 @@ public class UploadService {
                     }
                 });
 
-    }
-
-    public void Execute(ArrayList<Upload> uploads, Callback<ImageResponse> callback, final Context context, Firebase root, String[] types, Activity activity) {
-        for(Upload upload : uploads) {
-
-            final Callback<ImageResponse> cb = callback;
-
-            if (!NetworkUtils.isConnected(mContext.get())) {
-                //Callback will be called, so we prevent a unnecessary notification
-                cb.failure(null);
-                return;
-            }
-
-            final NotificationHelper notificationHelper = new NotificationHelper(mContext.get());
-            notificationHelper.createUploadingNotification();
-
-            RestAdapter restAdapter = buildRestAdapter();
-
-            restAdapter.create(ImgurAPI.class).postImage(
-                    Constants.getClientAuth(),
-                    upload.title,
-                    upload.description,
-                    upload.albumId,
-                    null,
-                    new TypedFile("image/*", upload.image),
-                    new Callback<ImageResponse>() {
-                        @Override
-                        public void success(ImageResponse imageResponse, Response response) {
-                            if (cb != null) cb.success(imageResponse, response);
-                            if (response == null) {
-                                /*
-                                 Notify image was NOT uploaded successfully
-                                */
-                                notificationHelper.createFailedUploadNotification();
-                                return;
-                            }
-                            /*
-                            Notify image was uploaded successfully
-                            */
-                            if (imageResponse.success) {
-                                notificationHelper.createUploadedNotification(imageResponse);
-                                //TODO: Enviar a firebase desde aqui a partir de la refencia del submit
-                                //imageResponse.data.link);
-
-                            }
-                        }
-
-                        @Override
-                        public void failure(RetrofitError error) {
-                            if (cb != null) cb.failure(error);
-                            notificationHelper.createFailedUploadNotification();
-                        }
-                    });
-        }
-        System.out.println(">>>> Se termino de enviar las fotos");
-        //Methods.submitActivity(context,root,types,activityName,activityId,userId);
-        //TODO: colocar el envio de la url a firebase a partir de una ref
     }
 
     private RestAdapter buildRestAdapter() {

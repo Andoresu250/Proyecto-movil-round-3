@@ -50,6 +50,7 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
     private Activity activity;
     private LatLng activityLatLng;
     public CurrentUser user;
+    private boolean firstDraw;
 
     String[] types = {"image","text","audio"};
 
@@ -77,8 +78,10 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
                 .addApi(LocationServices.API)
                 .build();
         this.getMapAsync(this);
+        //getActivity().getApplicationContext().deleteDatabase(DataBase.DB_NAME);
         db = new DataBase(getActivity().getApplicationContext());
         user = new CurrentUser(getActivity().getApplicationContext());
+        firstDraw = true;
     }
 
     @Override
@@ -123,6 +126,10 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
         mGoogleMap.setMyLocationEnabled(true);
         buildGoogleApiClient();
         mGoogleApiClient.connect();
+        //System.out.println(">>>>" + db.getImagesMarker(activity.getName(),user.getName()).size());
+        //System.out.println(">>>>" + db.getAudiosMarker(activity.getName(),user.getName()).size());
+        //System.out.println(">>>>" + db.getTextsMarker(activity.getName(),user.getName()).size());
+        //drawMarkers();
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -158,25 +165,24 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
         polylineOptions.geodesic(true);
         ArrayList<TCoordinates> coordinates = db.getCoordinates(activity.getName(),user.getName());
         for (TCoordinates coordinate : coordinates){
-            System.out.println(">>>>>" + coordinate.getCoorinate());
             polylineOptions.add(new LatLng(Double.parseDouble(coordinate.getCoorinate().split(",")[0]),Double.parseDouble(coordinate.getCoorinate().split(",")[1])));
         }
         mGoogleMap.addPolyline(polylineOptions);
-        //DRAW MARKERS
+        drawMarkers();
+    }
+
+    private void drawMarkers(){
         ArrayList<TData> imagesM = db.getImagesMarker(activity.getName(), user.getName());
-        for(TData imageM : imagesM){
-            System.out.println(">>>>" + imageM.getValue());
-            setCameraMarker(new LatLng(Double.parseDouble(imageM.getValue().split(",")[0]),Double.parseDouble(imageM.getValue().split(",")[1])));
+        for (TData imageM : imagesM) {
+            setCameraMarker(new LatLng(Double.parseDouble(imageM.getValue().split(",")[0]), Double.parseDouble(imageM.getValue().split(",")[1])));
         }
-        ArrayList<TData>  audiosM = db.getAudiosMarker(activity.getName(), user.getName());
-        for(TData audioM : audiosM){
-            System.out.println(">>>>" + audioM.getValue());
-            setMicMarker(new LatLng(Double.parseDouble(audioM.getValue().split(",")[0]),Double.parseDouble(audioM.getValue().split(",")[1])));
+        ArrayList<TData> audiosM = db.getAudiosMarker(activity.getName(), user.getName());
+        for (TData audioM : audiosM) {
+            setMicMarker(new LatLng(Double.parseDouble(audioM.getValue().split(",")[0]), Double.parseDouble(audioM.getValue().split(",")[1])));
         }
         ArrayList<TData> textsM = db.getTextsMarker(activity.getName(), user.getName());
-        for(TData textM : textsM){
-            System.out.println(">>>>" + textM.getValue());
-            setTextMarker(new LatLng(Double.parseDouble(textM.getValue().split(",")[0]),Double.parseDouble(textM.getValue().split(",")[1])));
+        for (TData textM : textsM) {
+            setTextMarker(new LatLng(Double.parseDouble(textM.getValue().split(",")[0]), Double.parseDouble(textM.getValue().split(",")[1])));
         }
     }
 
@@ -240,8 +246,6 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
                 BitmapFactory.decodeResource(getResources(),
                         R.drawable.camera)));
         mGoogleMap.addMarker(options);
-        TData cameraMarker = new TData(activity.getName(),user.getName(),latLng.toString().replaceAll("[()]","").replaceAll("[lat/lng: ]",""),"imageM");
-        db.insertData(cameraMarker);
     }
 
     public void setTextMarker(LatLng latLng) {
@@ -252,8 +256,6 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
                 BitmapFactory.decodeResource(getResources(),
                         R.drawable.message_text)));
         mGoogleMap.addMarker(options);
-        TData textMarker = new TData(activity.getName(),user.getName(),latLng.toString().replaceAll("[()]","").replaceAll("[lat/lng: ]",""),"textM");
-        db.insertData(textMarker);
     }
 
     public void setMicMarker(LatLng latLng) {
@@ -263,8 +265,6 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
                 BitmapFactory.decodeResource(getResources(),
                         R.drawable.microphone)));
         mGoogleMap.addMarker(options);
-        TData audioMarker = new TData(activity.getName(),user.getName(),latLng.toString().replaceAll("[()]","").replaceAll("[lat/lng: ]",""),"audioM");
-        db.insertData(audioMarker);
     }
 
     public void setActivityOnMap(){
@@ -283,10 +283,8 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
 
     public boolean isInActivity(){
         if(distFrom(latLng,activityLatLng) <= activity.getRadius()){
-            System.out.println(">>>>" + "ESTA");
             return true;
         }
-        System.out.println(">>>>" + "NO ESTA");
         return false;
     }
 
@@ -301,7 +299,6 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
         float dist = (float) (earthRadius * c);
         return dist;
     }
-
 
     @Override
     public void onConnectionSuspended(int i) {
