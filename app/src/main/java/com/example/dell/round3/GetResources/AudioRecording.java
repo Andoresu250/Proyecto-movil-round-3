@@ -4,9 +4,10 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Environment;
 
-import com.example.dell.round3.LocalDataBase.MyDataBase;
-import com.example.dell.round3.LocalDataBase.TFiles;
-import com.example.dell.round3.Activity.Maps.MyMapFragment;
+import com.example.dell.round3.DB.DataBase;
+import com.example.dell.round3.DB.TData;
+import com.example.dell.round3.FirebaseModels.Activity;
+import com.example.dell.round3.Activity.Maps.ActivityMapFragment;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,9 +20,8 @@ public class AudioRecording implements Serializable {
     private MediaRecorder myAudioRecorder;
     private MediaPlayer mediaPlayer = null;
     private String outputFile = null;
-    private MyMapFragment myMapFragment = null;
-    private int activityId;
-    private int userId;
+    private ActivityMapFragment activityMapFragment = null;
+    private Activity activity;
 
     private static final String AUDIO_RECORDER_FOLDER = "Proyecto/AudioRecorder";
     private static final String AUDIO_RECORDER_FILE_EXT = ".mp3";
@@ -30,10 +30,9 @@ public class AudioRecording implements Serializable {
 
     }
 
-    public AudioRecording(MyMapFragment myMapFragment, int activityId, int userId) {
-        this.myMapFragment = myMapFragment;
-        this.activityId = activityId;
-        this.userId = userId;
+    public AudioRecording(ActivityMapFragment activityMapFragment, Activity activity) {
+        this.activityMapFragment = activityMapFragment;
+        this.activity = activity;
     }
 
     public void starRecording(){
@@ -58,12 +57,10 @@ public class AudioRecording implements Serializable {
             myAudioRecorder.stop();
             myAudioRecorder.release();
             myAudioRecorder  = null;
-            myMapFragment.setMicMarket();
-            String token = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())+"";
-            TFiles file = new TFiles(activityId,userId,outputFile ,token, "audio");
-            MyDataBase myDataBase = new MyDataBase(myMapFragment.getActivity().getApplicationContext());
-            myDataBase.insertFiles(file);
-            System.out.println(">>>> SE INSERTO UN AUDIO SUPUESTAMENTE");
+            activityMapFragment.setMicMarker();
+            DataBase db = new DataBase(activityMapFragment.getActivity().getApplicationContext());
+            TData audio = new TData(activity.getName(),activityMapFragment.user.getName(),outputFile, "audio");
+            db.insertData(audio);
         }
     }
 

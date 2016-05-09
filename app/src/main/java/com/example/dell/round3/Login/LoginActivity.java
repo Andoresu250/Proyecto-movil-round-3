@@ -42,32 +42,22 @@ public class LoginActivity extends AppCompatActivity {
     public void btnLogin(View view) {
         edtLUser = (EditText) findViewById(R.id.edtLUser);
         edtLPassword = (EditText) findViewById(R.id.edtLPassword);
-        // CON ESTA URL ACCEDO A LOS USUARIOS QUE LOS LLAME USERS EN LA DB MAS EL NOMBRE DEL USUARIO, PORQUE
-        // LAS KEY DE LOS USUARIOS SON EL USUARIO QUE SE REGISTRAN
         Firebase get = rootUrl.child("Users/" + edtLUser.getText().toString());
-
-        // ESTE ES EL EVENTO PARA HACER EL GET DE USUARIOS, AQUI SOLO BUSCA EL USUARIO QUE SE QUIERE LOGEAR
         get.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // ESTE IF ES EN CASO, DE QUE EL DATASNAPSHOT SEA NULL ES PORQUE EL USUARIO NO EXISTE
                 if (dataSnapshot.getValue() != null) {
-
-                    //tod ESTOS HACE PARTE DE LA DESCODIFICACION DE LA PASSWORD, SI ENTRA AL IF ES PORQUE EL USUARIO
-                    // EXISTE
                     byte[] data = Base64.decode(dataSnapshot.child("Password").getValue().toString(), Base64.DEFAULT);
                     try {
                         String text = new String(data, "UTF-8");
                         if (text.equals(edtLPassword.getText().toString())) {
-                            // ESTOS TOAST LOS PUEDES QUITAR SOLO ME DICEN SI ENTRO O NO
+                            //TODO: cambiar este "entro"
+                            //TODO: login automatico
                             Toast toast1 = Toast.makeText(getApplicationContext(), "entro", Toast.LENGTH_SHORT);
                             toast1.show();
-                            // AQUI LO QUE HAGO ES QUE CUANDO EL USUARIO SE LOGEA, GUARDA SU USERNAME Y SU TYPO EN CURRENT USER
                             currentUser.setUser(edtLUser.getText().toString());
                             currentUser.setType(dataSnapshot.child("Type").getValue().toString());
-                            // ESTE ES EL METODO DEL INTENT QUE ME MANDA A LA VISTA DEL REGISTRO
-                            // ERA PARA PROBAR QUE CAMBIARA DE VISTA CUANDO SE LOGEARA
-                            //AQUI DEBERIA MANDARLO A LA VISTA DE LAS ACTIVIDADES
+                            currentUser.setName(dataSnapshot.child("Name").getValue().toString());
                             start();
 
                         } else  {

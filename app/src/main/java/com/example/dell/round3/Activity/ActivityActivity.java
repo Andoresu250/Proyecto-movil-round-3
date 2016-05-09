@@ -20,27 +20,21 @@ import android.view.View;
 
 import android.widget.Toast;
 
-import com.example.dell.round3.Activity.Maps.MyMapFragment;
+import com.example.dell.round3.Activity.Maps.ActivityMapFragment;
 import com.example.dell.round3.ApiImgur.imgurmodel.ImageResponse;
 import com.example.dell.round3.ApiImgur.imgurmodel.Upload;
-import com.example.dell.round3.ApiImgur.services.UploadService;
+import com.example.dell.round3.DB.DataBase;
 import com.example.dell.round3.Dialogs.MyAlertDialog;
 import com.example.dell.round3.FirebaseModels.Activity;
-import com.example.dell.round3.FirebaseModels.Marker;
-import com.example.dell.round3.FirebaseModels.Submit;
 import com.example.dell.round3.GetResources.AudioRecording;
 import com.example.dell.round3.GetResources.TakePicture;
 import com.example.dell.round3.Dialogs.TextDialog;
-import com.example.dell.round3.LocalDataBase.MyDataBase;
-import com.example.dell.round3.LocalDataBase.TFiles;
 import com.example.dell.round3.R;
 import com.firebase.client.Firebase;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -53,17 +47,11 @@ public class ActivityActivity extends AppCompatActivity {
     private TakePicture takePicture;
     private String firebaseUrl = "https://proyecto-movil.firebaseio.com/";
     private Firebase root;
-    private MyDataBase myDataBase;
-    public MyMapFragment myMapFragment;
+    private DataBase db;
+    public ActivityMapFragment activityMapFragment;
 
     //ACTIVITY PARAMS
-    String activityName;
-    float radius;
-    int activityId;
-    int userId;
-    double activityLat;
-    double activitylong;
-
+    private Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,23 +60,16 @@ public class ActivityActivity extends AppCompatActivity {
         Firebase.setAndroidContext(this);
         root = new Firebase("https://proyecto-movil.firebaseio.com/");
 
-        Firebase activituesRef = root.child("activies");
-        HashMap<String,Activity> activitiesList = new HashMap<>();
+        activity = (Activity) getIntent().getSerializableExtra("activity");
 
-        activityName = "test";
-        radius = 10;
-        activityId = 1;
-        userId = 1;
-        activityLat = 0;
-        activitylong = 0;
+        activityMapFragment = (ActivityMapFragment) getFragmentManager().findFragmentById(R.id.map);
+        activityMapFragment.setActivity(activity);
 
-        myDataBase = new MyDataBase(this);
+        db = new DataBase(this);
 
-        takePicture = new TakePicture(this, activityId, userId);
+        takePicture = new TakePicture(this, activity);
 
-        myMapFragment = (MyMapFragment) getFragmentManager().findFragmentById(R.id.map);
-
-        audioRecording = new AudioRecording(myMapFragment,activityId,userId);
+        audioRecording = new AudioRecording(activityMapFragment, activity);
 
         final FloatingActionButton buttonRecord = (FloatingActionButton) findViewById(R.id.action_record);
         assert buttonRecord != null;
@@ -128,10 +109,9 @@ public class ActivityActivity extends AppCompatActivity {
         buttonText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //myMapFragment.setTextMarket();
+
                 Bundle args = new Bundle();
-                args.putInt("activityId",activityId);
-                args.putInt("userId",userId);
+                args.putSerializable("activity", activity);
                 DialogFragment dialog = new TextDialog();
                 dialog.setArguments(args);
                 dialog.show(getSupportFragmentManager(), "dialog");
@@ -146,12 +126,13 @@ public class ActivityActivity extends AppCompatActivity {
                     // Your code here
                     Toast.makeText(ActivityActivity.this, "Enviando...", Toast.LENGTH_SHORT).show();
                     ArrayList<Upload> uploads = new ArrayList<Upload>();
-                    ArrayList<TFiles> images = myDataBase.getImages(activityId+"",userId+"");
+                    //TODO: colocar la subida de imagenes y modificarla a como toque
+                    /*ArrayList<TFiles> images = myDataBase.getImages(activityId+"",userId+"");
                     for (TFiles image: images) {
                         uploads.add(new Upload(new File(image.getFile())));
                     }
                     String[] types = {"image","text","audio"};
-                    new UploadService(ActivityActivity.this).Execute(uploads, new UiCallback(),ActivityActivity.this,root,types,activityName,activityId,userId);
+                    new UploadService(ActivityActivity.this).Execute(uploads, new UiCallback(),ActivityActivity.this,root,types,activity);*/
 
                 }else{
                     DialogFragment dialog = new MyAlertDialog();
@@ -173,7 +154,7 @@ public class ActivityActivity extends AppCompatActivity {
         if(resultCode == RESULT_OK){
             if(requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE){
                 System.out.println(">>>> LA FOTO SE TOMO");
-                myMapFragment.setCameraMarket();
+                activityMapFragment.setCameraMarker();
             }
         }
     }
@@ -207,5 +188,7 @@ public class ActivityActivity extends AppCompatActivity {
 
         }
     }
+
+
 
 }

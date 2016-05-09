@@ -10,26 +10,24 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.dell.round3.LocalDataBase.MyDataBase;
-import com.example.dell.round3.LocalDataBase.TFiles;
-import com.example.dell.round3.Activity.Maps.MyMapFragment;
+import com.example.dell.round3.DB.DataBase;
+import com.example.dell.round3.DB.TData;
+import com.example.dell.round3.FirebaseModels.Activity;
+import com.example.dell.round3.Activity.Maps.ActivityMapFragment;
+import com.example.dell.round3.Login.CurrentUser;
 import com.example.dell.round3.R;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class TextDialog extends DialogFragment {
 
-    int activityId;
-    int userId;
-
+    Activity activity;
+    CurrentUser user;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         Bundle args = getArguments();
-        activityId = args.getInt("activityId");
-        userId = args.getInt("userId");
+        activity = (Activity) args.getSerializable("activity");
+        user = new CurrentUser(getActivity().getApplicationContext());
 
         // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -46,12 +44,11 @@ public class TextDialog extends DialogFragment {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 EditText text = (EditText) view.findViewById(R.id.text);
-                                String token = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date())+"";
-                                TFiles file = new TFiles(activityId,userId,text.getText().toString() ,token, "text");
-                                MyDataBase myDataBase = new MyDataBase(getActivity().getApplicationContext());
-                                myDataBase.insertFiles(file);
-                                MyMapFragment myMapFragment = (MyMapFragment) getActivity().getFragmentManager().findFragmentById(R.id.map) ;
-                                myMapFragment.setTextMarket();
+                                DataBase db = new DataBase(getActivity().getApplicationContext());
+                                TData textD = new TData(activity.getName(), user.getName(),text.getText().toString(),"text");
+                                db.insertData(textD);
+                                ActivityMapFragment activityMapFragment = (ActivityMapFragment) getActivity().getFragmentManager().findFragmentById(R.id.map) ;
+                                activityMapFragment.setTextMarker();
                                 Toast.makeText(getActivity(), "Texto guardado",
                                         Toast.LENGTH_SHORT).show();
                             }

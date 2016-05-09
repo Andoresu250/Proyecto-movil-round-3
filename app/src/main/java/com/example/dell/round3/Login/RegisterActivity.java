@@ -22,6 +22,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText edtRUser;
     private EditText edtREmail;
     private EditText edtRPassword;
+    private EditText edtRName;
     private TextView tvUser;
     private TextView tvUserType;
     private String url = "https://proyecto-movil.firebaseio.com/";
@@ -51,12 +52,8 @@ public class RegisterActivity extends AppCompatActivity {
                 if (dataSnapshot.getValue() == null) {
                     edtREmail = (EditText) findViewById(R.id.edtREmail);
                     edtRPassword = (EditText) findViewById(R.id.edtRPassword);
-                    // YA CREO QUE ESTO LO CONOCES, AQUI SIMPLEMENTE ESTOY PUSH A LA DB CON LOS DATOS DEL USUARIO
+                    edtRName = (EditText) findViewById(R.id.edtRName);
                     Map<String, String> post1 = new HashMap<String, String>();
-                    // EN LA DB SOLO TIENE EMAIL, CONTRASEÑA Y TYPE
-                    // POR DEFECTO TODOS LOS USUARIOS LOS PONGO COMO USUARIO EN TYPE
-                    // QUE SIGNIFICA QUE SON ESTUDIANTES
-                    // LO PUEDES CAMBIAR COMO QUIERAS
                     post1.put("Email", edtREmail.getText().toString());
                     byte[] data = new byte[0];
                     try {
@@ -66,8 +63,8 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                     String base64 = Base64.encodeToString(data, Base64.DEFAULT);
                     post1.put("Password", base64);
+                    post1.put("Name", edtRName.getText().toString());
                     post1.put("Type", "Usuario");
-
                     rootUrl.child("Users").child(edtRUser.getText().toString()).setValue(post1);
                     finish();
                 } else {
@@ -85,12 +82,10 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void btnLogout(View view) {
-        // ESTE ES EL BOTON DEL LOGOUT
         currentUser.setUser("Users");
         currentUser.setType("Nothing");
         tvUser.setText(currentUser.getUser());
         tvUserType.setText(currentUser.getType());
-
     }
 
 }

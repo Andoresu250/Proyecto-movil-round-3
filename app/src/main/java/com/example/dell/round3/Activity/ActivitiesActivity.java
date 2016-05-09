@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.dell.round3.FirebaseModels.Activity;
@@ -41,7 +42,7 @@ public class ActivitiesActivity extends AppCompatActivity {
         System.out.println(">>>>" + currentUser.getType());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        if(currentUser.getType().equals("Profesor")){
+        if(isProfessor()){
             fab.show();
         }else{
             fab.hide();
@@ -53,6 +54,19 @@ public class ActivitiesActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent i =  new Intent(ActivitiesActivity.this, NewActivity.class);
                 startActivity(i);
+            }
+        });
+
+        activitiesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if(isProfessor()){
+                    //TODO: colocar la vista de los submits
+                }else{
+                    Intent studentIntent = new Intent(ActivitiesActivity.this, ActivityActivity.class);
+                    studentIntent.putExtra("activity", (Activity)view.getTag());
+                    startActivity(studentIntent);
+                }
             }
         });
 
@@ -84,6 +98,10 @@ public class ActivitiesActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private boolean isProfessor(){
+        return currentUser.getType().equals("Profesor");
     }
 
 }

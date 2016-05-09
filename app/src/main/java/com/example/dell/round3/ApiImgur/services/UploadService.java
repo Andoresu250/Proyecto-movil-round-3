@@ -11,9 +11,7 @@ import com.example.dell.round3.ApiImgur.imgurmodel.ImageResponse;
 import com.example.dell.round3.ApiImgur.imgurmodel.ImgurAPI;
 import com.example.dell.round3.ApiImgur.imgurmodel.Upload;
 import com.example.dell.round3.ApiImgur.utils.NetworkUtils;
-import com.example.dell.round3.Methods;
-import com.example.dell.round3.LocalDataBase.MyDataBase;
-import com.example.dell.round3.LocalDataBase.TImages;
+import com.example.dell.round3.FirebaseModels.Activity;
 import com.firebase.client.Firebase;
 
 import retrofit.Callback;
@@ -82,7 +80,7 @@ public class UploadService {
 
     }
 
-    public void Execute(ArrayList<Upload> uploads, Callback<ImageResponse> callback, final Context context, Firebase root, String[] types, String activityName, int activityId, int userId) {
+    public void Execute(ArrayList<Upload> uploads, Callback<ImageResponse> callback, final Context context, Firebase root, String[] types, Activity activity) {
         for(Upload upload : uploads) {
 
             final Callback<ImageResponse> cb = callback;
@@ -121,9 +119,9 @@ public class UploadService {
                             */
                             if (imageResponse.success) {
                                 notificationHelper.createUploadedNotification(imageResponse);
-                                TImages image = new TImages(imageResponse.data.link);
-                                MyDataBase myDataBase = new MyDataBase(context);
-                                myDataBase.insertImages(image);
+                                //TODO: Enviar a firebase desde aqui a partir de la refencia del submit
+                                //imageResponse.data.link);
+
                             }
                         }
 
@@ -135,7 +133,8 @@ public class UploadService {
                     });
         }
         System.out.println(">>>> Se termino de enviar las fotos");
-        Methods.submitActivity(context,root,types,activityName,activityId,userId);
+        //Methods.submitActivity(context,root,types,activityName,activityId,userId);
+        //TODO: colocar el envio de la url a firebase a partir de una ref
     }
 
     private RestAdapter buildRestAdapter() {

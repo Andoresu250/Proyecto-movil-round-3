@@ -28,21 +28,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:text="User"
+        android:hint="Username"
         android:inputType="text"
         android:id="@+id/edtRUser"/>
     <EditText
         android:inputType="textEmailAddress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Email"
+        android:hint="Email"
         android:id="@+id/edtREmail"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Full name"
+        android:id="@+id/edtRName"/>
 
     <EditText
         android:inputType="textPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Password"
+        android:hint="Password"
         android:id="@+id/edtRPassword"/>
 
     <Button

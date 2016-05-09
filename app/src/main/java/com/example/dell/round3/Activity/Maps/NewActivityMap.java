@@ -11,13 +11,9 @@ import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.SeekBar;
 
-import com.example.dell.round3.Activity.NewActivity;
 import com.example.dell.round3.R;
-import com.firebase.client.Firebase;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,8 +35,7 @@ public class NewActivityMap extends MapFragment implements GoogleApiClient.Conne
         GoogleMap.OnMapLongClickListener,
         GoogleMap.OnMapClickListener,
         GoogleMap.OnMarkerClickListener,
-        OnMapReadyCallback,
-        LocationListener {
+        OnMapReadyCallback {
 
     private GoogleApiClient mGoogleApiClient;
     private final int[] MAP_TYPES = {GoogleMap.MAP_TYPE_SATELLITE,
@@ -49,11 +44,8 @@ public class NewActivityMap extends MapFragment implements GoogleApiClient.Conne
             GoogleMap.MAP_TYPE_TERRAIN,
             GoogleMap.MAP_TYPE_NONE};
     private int curMapTypeIndex = 1;
-    LocationRequest mLocationRequest;
     LatLng latLng;
     GoogleMap mGoogleMap;
-    String firebaseUrl = "https://proyecto-movil.firebaseio.com/";
-    Firebase root;
     public LatLng markLatLng;
 
     private void initListeners() {
@@ -169,10 +161,7 @@ public class NewActivityMap extends MapFragment implements GoogleApiClient.Conne
         SeekBar radiusSeekBar = (SeekBar) getActivity().findViewById(R.id.radiusSeekBar);
         radiusSeekBar.setEnabled(true);
         int radius = radiusSeekBar.getProgress();
-        mGoogleMap.clear();
-        MarkerOptions options = new MarkerOptions().position( markLatLng );
-        options.icon( BitmapDescriptorFactory.defaultMarker() );
-        mGoogleMap.addMarker( options );
+        changeRadius(radius);
 
     }
 
@@ -201,8 +190,4 @@ public class NewActivityMap extends MapFragment implements GoogleApiClient.Conne
         return false;
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-
-    }
 }

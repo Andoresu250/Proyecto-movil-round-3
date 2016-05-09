@@ -1,9 +1,10 @@
 package com.example.dell.round3.FirebaseModels;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Activity {
+public class Activity implements Serializable {
     String name;
     double latitude;
     double longitude;
