@@ -1,5 +1,7 @@
 package com.example.dell.round3.Activity;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -21,6 +23,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.dell.round3.Activity.Maps.ActivityMapFragment;
+import com.example.dell.round3.ApiImgur.activities.MainActivity;
 import com.example.dell.round3.ApiImgur.imgurmodel.ImageResponse;
 import com.example.dell.round3.ApiImgur.imgurmodel.Upload;
 import com.example.dell.round3.ApiImgur.services.UploadService;
@@ -36,6 +39,7 @@ import com.example.dell.round3.GetResources.TakePicture;
 import com.example.dell.round3.Dialogs.TextDialog;
 import com.example.dell.round3.Login.CurrentUser;
 import com.example.dell.round3.R;
+import com.example.dell.round3.UpdateAudio.Audio;
 import com.firebase.client.Firebase;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
@@ -85,23 +89,28 @@ public class ActivityActivity extends AppCompatActivity {
         buttonRecord.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    // startRecording();
-                    Vibrator v = (Vibrator) ActivityActivity.this.getSystemService(Context.VIBRATOR_SERVICE);
-                    v.vibrate(100);
-                    Handler h = new Handler();
-                    h.postDelayed(new Runnable(){@Override public void run(){}}, 100);
-                    buttonRecord.setTitle("Grabando...");
-                    buttonRecord.setIcon(R.drawable.ic_my_mic_rec);
-                    audioRecording.starRecording();
-                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP
-                        || motionEvent.getAction() == MotionEvent.ACTION_CANCEL) {
-                    buttonRecord.setTitle("Manten presionado para grabar");
-                    buttonRecord.setIcon(R.drawable.ic_my_mic);
-                    //stop
-                    audioRecording.stopRecording();
+                if(activityMapFragment.isInActivity()){
+                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                        // startRecording();
+                        Vibrator v = (Vibrator) ActivityActivity.this.getSystemService(Context.VIBRATOR_SERVICE);
+                        v.vibrate(100);
+                        Handler h = new Handler();
+                        h.postDelayed(new Runnable(){@Override public void run(){}}, 100);
+                        buttonRecord.setTitle("Grabando...");
+                        buttonRecord.setIcon(R.drawable.ic_my_mic_rec);
+                        audioRecording.starRecording();
+                    } else if (motionEvent.getAction() == MotionEvent.ACTION_UP
+                            || motionEvent.getAction() == MotionEvent.ACTION_CANCEL) {
+                        buttonRecord.setTitle("Manten presionado para grabar");
+                        buttonRecord.setIcon(R.drawable.ic_my_mic);
+                        //stop
+                        audioRecording.stopRecording();
+                    }
+                    return true;
+                }else{
+                    Toast.makeText(ActivityActivity.this, "Estas fuera del rango de la actividad", Toast.LENGTH_SHORT).show();
+                    return false;
                 }
-                return true;
             }
         });
         final FloatingActionButton buttonCamera = (FloatingActionButton) findViewById(R.id.action_open_camera);
@@ -109,7 +118,11 @@ public class ActivityActivity extends AppCompatActivity {
         buttonCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                takePicture.take();
+                if(activityMapFragment.isInActivity()){
+                    takePicture.take();
+                }else{
+                    Toast.makeText(ActivityActivity.this, "Estas fuera del rango de la actividad", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         final FloatingActionButton buttonText = (FloatingActionButton) findViewById(R.id.action_text);
@@ -117,12 +130,16 @@ public class ActivityActivity extends AppCompatActivity {
         buttonText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(activityMapFragment.isInActivity()){
+                    Bundle args = new Bundle();
+                    args.putSerializable("activity", activity);
+                    DialogFragment dialog = new TextDialog();
+                    dialog.setArguments(args);
+                    dialog.show(getSupportFragmentManager(), "dialog");
+                }else{
+                    Toast.makeText(ActivityActivity.this, "Estas fuera del rango de la actividad", Toast.LENGTH_SHORT).show();
+                }
 
-                Bundle args = new Bundle();
-                args.putSerializable("activity", activity);
-                DialogFragment dialog = new TextDialog();
-                dialog.setArguments(args);
-                dialog.show(getSupportFragmentManager(), "dialog");
             }
         });
         final FloatingActionButton buttonUpload = (FloatingActionButton) findViewById(R.id.action_upload);
@@ -133,11 +150,8 @@ public class ActivityActivity extends AppCompatActivity {
                 if (isConnectedViaWifi()) {
                     // Your code here
                     Toast.makeText(ActivityActivity.this, "Enviando...", Toast.LENGTH_SHORT).show();
-                    Firebase submitRef = sendActivity();
-                    ArrayList<String> images = db.getImagesUrlString(activity.getName(),user.getName());
-                    for (int i = 0; i < images.size() ; i++) {
-                        new UploadService(ActivityActivity.this).Execute(new Upload(new File(images.get(i))),new UiCallback(),submitRef,i);
-                    }
+                    sendFullActivity();
+
                 }else{
                     DialogFragment dialog = new MyAlertDialog();
                     dialog.show(getSupportFragmentManager(), "dialog");
@@ -215,20 +229,63 @@ public class ActivityActivity extends AppCompatActivity {
         }
 
         ArrayList<String> coordinates = db.getCoordinatesString(activity.getName(),user.getName());
-        //ArrayList<String> imagesUrl = db.getImagesUrlString(activity.getName(), user.getName());
-        ArrayList<String> audiosUrl = db.getAudiosUrlString(activity.getName(), user.getName());
         ArrayList<String> texts = db.getTextsString(activity.getName(), user.getName());
 
         submit.setMarkers(markers);
         submit.setCoordinates(coordinates);
-        //submit.setImages(imagesUrl);
-        submit.setAudios(audiosUrl);
         submit.setTexts(texts);
         submit.setStudentName(user.getName());
 
         Firebase finalRef = submitRef.push();
         finalRef.setValue(submit);
         return finalRef;
+    }
 
+    private void uploadImages(Firebase submitRef){
+        ArrayList<String> images = db.getImagesUrlString(activity.getName(),user.getName());
+        for (int i = 0; i < images.size() ; i++) {
+            new UploadService(ActivityActivity.this).Execute(new Upload(new File(images.get(i))),new UiCallback(),submitRef,i);
+        }
+    }
+
+    private void uploadAudios(final Firebase submitRef){
+        final ArrayList<String> audios = db.getAudiosUrlString(activity.getName(),user.getName());
+        final String[] urlSong = {""};
+        final Audio audioUploader = new Audio();
+        for (int i = 0; i < audios.size() ; i++) {
+            final ProgressDialog dialog = ProgressDialog.show(ActivityActivity.this, "", "Subiendo audio #" + i +"..." , true);
+            final int finalI = i;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        urlSong[0] = audioUploader.uploadFile(audios.get(finalI), dialog, submitRef, finalI);
+                    } catch (OutOfMemoryError e) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(ActivityActivity.this, "Insufficient Memory!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        dialog.dismiss();
+                    }
+
+                }
+            }).start();
+        }
+    }
+
+    private void deleteData(){
+        db.deleteData(activity.getName(),user.getName());
+        db.deleteCoordinates(activity.getName(),user.getName());
+    }
+
+    private void sendFullActivity(){
+        Firebase submitRef = sendActivity();
+        uploadImages(submitRef);
+        uploadAudios(submitRef);
+        deleteData();
+        Intent activitiesIntent = new Intent(ActivityActivity.this,ActivitiesActivity.class);
+        startActivity(activitiesIntent);
     }
 }
