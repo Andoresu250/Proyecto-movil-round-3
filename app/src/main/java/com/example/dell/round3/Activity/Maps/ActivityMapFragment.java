@@ -79,11 +79,6 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
         this.getMapAsync(this);
         db = new DataBase(getActivity().getApplicationContext());
         user = new CurrentUser(getActivity().getApplicationContext());
-        ArrayList<TCoordinates> coordinates = db.getALlCoordinates();
-        System.out.println(">>>>>>" + coordinates.size());
-        for(TCoordinates c : coordinates){
-            System.out.println(">>>>" + c.getCoorinate());
-        }
     }
 
     @Override
@@ -100,7 +95,7 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
             latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
             activityLatLng = new LatLng(activity.getLatitude(), activity.getLongitude());
             if(isInActivity()) {
-                TCoordinates coordinate = new TCoordinates(activity.getName(), user.getName(), latLng.toString().replaceAll("[()]",""));
+                TCoordinates coordinate = new TCoordinates(activity.getName(),user.getName(),latLng.toString().replaceAll("[()]","").replaceAll("[lat/lng: ]",""));
                 db.insertCoordinate(coordinate);
             }
             setActivityOnMap();
@@ -146,8 +141,7 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
         markerOptions.position(latLng);
         markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
         if (isInActivity()){
-            TCoordinates coordinate = new TCoordinates(activity.getName(),user.getName(),latLng.toString().replaceAll("[()]",""));
-            System.out.println(">>>>>TAMAÑO " +db.getALlCoordinates().size());
+            TCoordinates coordinate = new TCoordinates(activity.getName(),user.getName(),latLng.toString().replaceAll("[()]","").replaceAll("[lat/lng: ]",""));
             db.insertCoordinate(coordinate);
         }
         CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -171,14 +165,17 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
         //DRAW MARKERS
         ArrayList<TData> imagesM = db.getImagesMarker(activity.getName(), user.getName());
         for(TData imageM : imagesM){
+            System.out.println(">>>>" + imageM.getValue());
             setCameraMarker(new LatLng(Double.parseDouble(imageM.getValue().split(",")[0]),Double.parseDouble(imageM.getValue().split(",")[1])));
         }
-        ArrayList<TData>  audiosM = db.getImagesMarker(activity.getName(), user.getName());
+        ArrayList<TData>  audiosM = db.getAudiosMarker(activity.getName(), user.getName());
         for(TData audioM : audiosM){
+            System.out.println(">>>>" + audioM.getValue());
             setMicMarker(new LatLng(Double.parseDouble(audioM.getValue().split(",")[0]),Double.parseDouble(audioM.getValue().split(",")[1])));
         }
-        ArrayList<TData> textsM = db.getImagesMarker(activity.getName(), user.getName());
+        ArrayList<TData> textsM = db.getTextsMarker(activity.getName(), user.getName());
         for(TData textM : textsM){
+            System.out.println(">>>>" + textM.getValue());
             setTextMarker(new LatLng(Double.parseDouble(textM.getValue().split(",")[0]),Double.parseDouble(textM.getValue().split(",")[1])));
         }
     }
@@ -209,7 +206,7 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
                 BitmapFactory.decodeResource(getResources(),
                         R.drawable.camera)));
         mGoogleMap.addMarker(options);
-        TData cameraMarker = new TData(activity.getName(),user.getName(),latLng.toString().replaceAll("[()]",""),"imageM");
+        TData cameraMarker = new TData(activity.getName(),user.getName(),latLng.toString().replaceAll("[()]","").replaceAll("[lat/lng: ]",""),"imageM");
         db.insertData(cameraMarker);
     }
 
@@ -221,7 +218,7 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
                 BitmapFactory.decodeResource(getResources(),
                         R.drawable.message_text)));
         mGoogleMap.addMarker(options);
-        TData textMarker = new TData(activity.getName(),user.getName(),latLng.toString().replaceAll("[()]",""),"textM");
+        TData textMarker = new TData(activity.getName(),user.getName(),latLng.toString().replaceAll("[()]","").replaceAll("[lat/lng: ]",""),"textM");
         db.insertData(textMarker);
     }
 
@@ -232,7 +229,7 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
                 BitmapFactory.decodeResource(getResources(),
                         R.drawable.microphone)));
         mGoogleMap.addMarker(options);
-        TData audioMarker = new TData(activity.getName(),user.getName(),latLng.toString().replaceAll("[()]",""),"audioM");
+        TData audioMarker = new TData(activity.getName(),user.getName(),latLng.toString().replaceAll("[()]","").replaceAll("[lat/lng: ]",""),"audioM");
         db.insertData(audioMarker);
     }
 
@@ -243,7 +240,7 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
                 BitmapFactory.decodeResource(getResources(),
                         R.drawable.camera)));
         mGoogleMap.addMarker(options);
-        TData cameraMarker = new TData(activity.getName(),user.getName(),latLng.toString().replaceAll("[()]",""),"imageM");
+        TData cameraMarker = new TData(activity.getName(),user.getName(),latLng.toString().replaceAll("[()]","").replaceAll("[lat/lng: ]",""),"imageM");
         db.insertData(cameraMarker);
     }
 
@@ -255,7 +252,7 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
                 BitmapFactory.decodeResource(getResources(),
                         R.drawable.message_text)));
         mGoogleMap.addMarker(options);
-        TData textMarker = new TData(activity.getName(),user.getName(),latLng.toString().replaceAll("[()]",""),"textM");
+        TData textMarker = new TData(activity.getName(),user.getName(),latLng.toString().replaceAll("[()]","").replaceAll("[lat/lng: ]",""),"textM");
         db.insertData(textMarker);
     }
 
@@ -266,7 +263,7 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
                 BitmapFactory.decodeResource(getResources(),
                         R.drawable.microphone)));
         mGoogleMap.addMarker(options);
-        TData audioMarker = new TData(activity.getName(),user.getName(),latLng.toString().replaceAll("[()]",""),"audioM");
+        TData audioMarker = new TData(activity.getName(),user.getName(),latLng.toString().replaceAll("[()]","").replaceAll("[lat/lng: ]",""),"audioM");
         db.insertData(audioMarker);
     }
 

@@ -11,8 +11,8 @@ import java.util.ArrayList;
 
 public class DataBase extends SQLiteOpenHelper {
 
-        private static final String DB_NAME = "Taggealo";
-        private static final int SCHEME_VERSION = 2;
+        public static final String DB_NAME = "Taggealo2";
+        private static final int SCHEME_VERSION = 4;
         private SQLiteDatabase db;
 
     public DataBase(Context context) {
@@ -38,12 +38,10 @@ public class DataBase extends SQLiteOpenHelper {
     }
 
     public void insertCoordinate(TCoordinates coordinate){
-        db.execSQL(TCoordinates.CREATE_DB_TABLE);
         db.insert(TCoordinates.TABLE_NAME,null,generateValue(coordinate));
     }
 
     public void insertData(TData data){
-        db.execSQL(TData.CREATE_DB_TABLE);
         db.insert(TData.TABLE_NAME,null,generateValue(data));
     }
 
@@ -59,21 +57,7 @@ public class DataBase extends SQLiteOpenHelper {
                 coordinate.setActivity_name(c.getString(0));
                 coordinate.setUser_name(c.getString(1));
                 coordinate.setCoorinate(c.getString(2));
-            }while (c.moveToNext());
-        }
-        return coordinates;
-    }
-
-    public ArrayList<TCoordinates> getALlCoordinates(){
-        ArrayList<TCoordinates> coordinates = new ArrayList<>();
-        String query = "SELECT * FROM " + TCoordinates.TABLE_NAME;
-        Cursor c = db.rawQuery(query ,null);
-        if (c.moveToFirst()){
-            do {
-                TCoordinates coordinate = new TCoordinates();
-                coordinate.setActivity_name(c.getString(0));
-                coordinate.setUser_name(c.getString(1));
-                coordinate.setCoorinate(c.getString(2));
+                coordinates.add(coordinate);
             }while (c.moveToNext());
         }
         return coordinates;
@@ -94,6 +78,7 @@ public class DataBase extends SQLiteOpenHelper {
                 data.setUser_name(c.getString(1));
                 data.setValue(c.getString(2));
                 data.setType(c.getString(3));
+                datas.add(data);
             }while (c.moveToNext());
         }
         return datas;
@@ -114,6 +99,7 @@ public class DataBase extends SQLiteOpenHelper {
                 data.setUser_name(c.getString(1));
                 data.setValue(c.getString(2));
                 data.setType(c.getString(3));
+                datas.add(data);
             }while (c.moveToNext());
         }
         return datas;
@@ -134,6 +120,7 @@ public class DataBase extends SQLiteOpenHelper {
                 data.setUser_name(c.getString(1));
                 data.setValue(c.getString(2));
                 data.setType(c.getString(3));
+                datas.add(data);
             }while (c.moveToNext());
         }
         return datas;
@@ -154,6 +141,7 @@ public class DataBase extends SQLiteOpenHelper {
                 data.setUser_name(c.getString(1));
                 data.setValue(c.getString(2));
                 data.setType(c.getString(3));
+                datas.add(data);
             }while (c.moveToNext());
         }
         return datas;
@@ -174,6 +162,7 @@ public class DataBase extends SQLiteOpenHelper {
                 data.setUser_name(c.getString(1));
                 data.setValue(c.getString(2));
                 data.setType(c.getString(3));
+                datas.add(data);
             }while (c.moveToNext());
         }
         return datas;
@@ -194,6 +183,7 @@ public class DataBase extends SQLiteOpenHelper {
                 data.setUser_name(c.getString(1));
                 data.setValue(c.getString(2));
                 data.setType(c.getString(3));
+                datas.add(data);
             }while (c.moveToNext());
         }
         return datas;

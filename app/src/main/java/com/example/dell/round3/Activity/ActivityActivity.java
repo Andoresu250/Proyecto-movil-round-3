@@ -87,7 +87,6 @@ public class ActivityActivity extends AppCompatActivity {
                     audioRecording.starRecording();
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_UP
                         || motionEvent.getAction() == MotionEvent.ACTION_CANCEL) {
-                    Toast.makeText(ActivityActivity.this, "Grabado finalizado", Toast.LENGTH_SHORT).show();
                     buttonRecord.setTitle("Manten presionado para grabar");
                     buttonRecord.setIcon(R.drawable.ic_my_mic);
                     //stop

@@ -3,6 +3,7 @@ package com.example.dell.round3.GetResources;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Environment;
+import android.widget.Toast;
 
 import com.example.dell.round3.DB.DataBase;
 import com.example.dell.round3.DB.TData;
@@ -53,14 +54,21 @@ public class AudioRecording implements Serializable {
     }
 
     public void stopRecording(){
-        if( myAudioRecorder != null){
-            myAudioRecorder.stop();
-            myAudioRecorder.release();
-            myAudioRecorder  = null;
-            activityMapFragment.setMicMarker();
-            DataBase db = new DataBase(activityMapFragment.getActivity().getApplicationContext());
-            TData audio = new TData(activity.getName(),activityMapFragment.user.getName(),outputFile, "audio");
-            db.insertData(audio);
+        try {
+            if (myAudioRecorder != null) {
+                myAudioRecorder.stop();
+                myAudioRecorder.release();
+                myAudioRecorder = null;
+                activityMapFragment.setMicMarker();
+                DataBase db = new DataBase(activityMapFragment.getActivity().getApplicationContext());
+                TData audio = new TData(activity.getName(), activityMapFragment.user.getName(), outputFile, "audio");
+                db.insertData(audio);
+                Toast.makeText(activityMapFragment.getActivity().getApplicationContext(), "Grabado finalizado", Toast.LENGTH_SHORT).show();
+            }
+        }catch (Exception e){
+            File a = new File(outputFile);
+            a.delete();
+            Toast.makeText(activityMapFragment.getActivity().getApplicationContext(), "No puedes grabar un audio tan corto", Toast.LENGTH_SHORT).show();
         }
     }
 
