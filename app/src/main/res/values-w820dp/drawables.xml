@@ -6,4 +6,6 @@
     <item name="ic_camera" type="drawable">@drawable/ic_my_camera</item>
     <item name="ic_text" type="drawable">@drawable/ic_text</item>
     <item name="ic_upload" type="drawable">@drawable/ic_upload</item>
+    <item name="ic_play" type="drawable">@drawable/ic_play</item>
+    <item name="ic_pause" type="drawable">@drawable/ic_pause</item>
 </resources>

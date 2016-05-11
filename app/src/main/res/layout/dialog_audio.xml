@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View android:id="@+id/fakeView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true"/>
+    <ImageButton
+        android:src="@drawable/ic_play"
+        android:layout_height="50dip"
+        android:background="@color/colorAccent"
+        android:layout_width="wrap_content"
+        android:id="@+id/playBtn"
+        android:layout_alignRight="@id/fakeView"
+        android:layout_alignParentLeft="true"
+        />
+
+    <ImageButton
+        android:src="@drawable/ic_pause"
+        android:background="@color/colorAccent"
+        android:layout_width="wrap_content"
+        android:layout_height="50dip"
+        android:id="@+id/pauseBtn"
+        android:layout_alignLeft="@id/fakeView"
+        android:layout_alignParentRight="true"
+        />
+
+</RelativeLayout>

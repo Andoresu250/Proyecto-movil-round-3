@@ -75,7 +75,7 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
                 .addApi(LocationServices.API)
                 .build();
         this.getMapAsync(this);
-        //getActivity().getApplicationContext().deleteDatabase(DataBase.DB_NAME);
+        getActivity().getApplicationContext().deleteDatabase(DataBase.DB_NAME);
         db = new DataBase(getActivity().getApplicationContext());
         user = new CurrentUser(getActivity().getApplicationContext());
     }

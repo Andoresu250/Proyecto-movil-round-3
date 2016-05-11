@@ -14,7 +14,9 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
 
+import com.example.dell.round3.Dialogs.AudioDialog;
 import com.example.dell.round3.Dialogs.ImageDialog;
+import com.example.dell.round3.Dialogs.ShowTextDialog;
 import com.example.dell.round3.FirebaseModels.Activity;
 import com.example.dell.round3.FirebaseModels.Data;
 import com.example.dell.round3.FirebaseModels.Submit;
@@ -220,9 +222,19 @@ public class ViewActivityMapFragment extends MapFragment implements GoogleApiCli
             dialog.show(fragmentManager,"dialog");
         }else{
             if(title.contains("http://www.coderefer.com/extras/uploads/")){
-
+                Bundle args = new Bundle();
+                args.putSerializable("url", title);
+                DialogFragment dialog = new AudioDialog();
+                dialog.setArguments(args);
+                ViewActivityMapFragment.this.getFragmentManager();
+                dialog.show(fragmentManager,"dialog");
             }else{
-
+                Bundle args = new Bundle();
+                args.putSerializable("text", title);
+                DialogFragment dialog = new ShowTextDialog();
+                dialog.setArguments(args);
+                ViewActivityMapFragment.this.getFragmentManager();
+                dialog.show(fragmentManager,"dialog");
             }
         }
         return false;

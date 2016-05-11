@@ -71,6 +71,7 @@ public class ActivityActivity extends AppCompatActivity {
         user = new CurrentUser(this);
         activity = (Activity) getIntent().getSerializableExtra("activity");
 
+
         activityMapFragment = (ActivityMapFragment) getFragmentManager().findFragmentById(R.id.map);
         activityMapFragment.setActivity(activity);
 
@@ -229,7 +230,7 @@ public class ActivityActivity extends AppCompatActivity {
 
     private void uploadAudios(final Firebase submitRef){
         final ArrayList<String> audios = db.getAudiosUrlString(activity.getName(),user.getName());
-        final ArrayList<String> audiosM = db.getImagesMarkerString(activity.getName(),user.getName());
+        final ArrayList<String> audiosM = db.getAudiosMarkerString(activity.getName(),user.getName());
         final String[] urlSong = {""};
         final Audio audioUploader = new Audio();
         for (int i = 0; i < audios.size() ; i++) {
@@ -257,7 +258,7 @@ public class ActivityActivity extends AppCompatActivity {
 
     private void uploadTexts(Firebase submitRef){
         ArrayList<String> texts = db.getTextsString(activity.getName(), user.getName());
-        ArrayList<String> textsM = db.getImagesMarkerString(activity.getName(),user.getName());
+        ArrayList<String> textsM = db.getTextsMarkerString(activity.getName(),user.getName());
         ArrayList<Data> data = new ArrayList<>();
         for (int i = 0; i < texts.size(); i++) {
             data.add(new Data(textsM.get(i),texts.get(i)));
