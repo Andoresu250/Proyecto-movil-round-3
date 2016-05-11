@@ -23,16 +23,13 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.dell.round3.Activity.Maps.ActivityMapFragment;
-import com.example.dell.round3.ApiImgur.activities.MainActivity;
 import com.example.dell.round3.ApiImgur.imgurmodel.ImageResponse;
 import com.example.dell.round3.ApiImgur.imgurmodel.Upload;
 import com.example.dell.round3.ApiImgur.services.UploadService;
 import com.example.dell.round3.DB.DataBase;
-import com.example.dell.round3.DB.TCoordinates;
-import com.example.dell.round3.DB.TData;
 import com.example.dell.round3.Dialogs.MyAlertDialog;
 import com.example.dell.round3.FirebaseModels.Activity;
-import com.example.dell.round3.FirebaseModels.Marker;
+import com.example.dell.round3.FirebaseModels.Data;
 import com.example.dell.round3.FirebaseModels.Submit;
 import com.example.dell.round3.GetResources.AudioRecording;
 import com.example.dell.round3.GetResources.TakePicture;
@@ -46,7 +43,6 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -213,43 +209,27 @@ public class ActivityActivity extends AppCompatActivity {
 
         Submit submit = new Submit();
 
-        ArrayList<TData> imagesM = db.getImagesMarker(activity.getName(),user.getName());
-        ArrayList<TData> audiosM = db.getImagesMarker(activity.getName(),user.getName());
-        ArrayList<TData> textsM = db.getImagesMarker(activity.getName(),user.getName());
-
-        ArrayList<Marker> markers = new ArrayList<>();
-        for (TData imageM : imagesM){
-            markers.add(new Marker("image",imageM.getValue()));
-        }
-        for (TData audioM : audiosM){
-            markers.add(new Marker("audio",audioM.getValue()));
-        }
-        for (TData textM : textsM){
-            markers.add(new Marker("text",textM.getValue()));
-        }
-
         ArrayList<String> coordinates = db.getCoordinatesString(activity.getName(),user.getName());
-        ArrayList<String> texts = db.getTextsString(activity.getName(), user.getName());
 
-        submit.setMarkers(markers);
         submit.setCoordinates(coordinates);
-        submit.setTexts(texts);
-        submit.setStudentName(user.getName());
 
-        Firebase finalRef = submitRef.push();
+        submit.setStudentName(user.getUser());
+        Firebase finalRef = submitRef.child(user.getName());
         finalRef.setValue(submit);
         return finalRef;
     }
 
     private void uploadImages(Firebase submitRef){
         ArrayList<String> images = db.getImagesUrlString(activity.getName(),user.getName());
+        ArrayList<String> imagesM = db.getImagesMarkerString(activity.getName(),user.getName());
         for (int i = 0; i < images.size() ; i++) {
-            new UploadService(ActivityActivity.this).Execute(new Upload(new File(images.get(i))),new UiCallback(),submitRef,i);
+            new UploadService(ActivityActivity.this).Execute(new Upload(new File(images.get(i))),new UiCallback(),submitRef,i, imagesM.get(i));
         }
     }
 
     private void uploadAudios(final Firebase submitRef){
         final ArrayList<String> audios = db.getAudiosUrlString(activity.getName(),user.getName());
+        final ArrayList<String> audiosM = db.getImagesMarkerString(activity.getName(),user.getName());
         final String[] urlSong = {""};
         final Audio audioUploader = new Audio();
         for (int i = 0; i < audios.size() ; i++) {
@@ -259,7 +239,7 @@ public class ActivityActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     try {
-                        urlSong[0] = audioUploader.uploadFile(audios.get(finalI), dialog, submitRef, finalI);
+                        urlSong[0] = audioUploader.uploadFile(audios.get(finalI), dialog, submitRef, finalI, audiosM.get(finalI));
                     } catch (OutOfMemoryError e) {
                         runOnUiThread(new Runnable() {
                             @Override
@@ -275,6 +255,18 @@ public class ActivityActivity extends AppCompatActivity {
         }
     }
 
+    private void uploadTexts(Firebase submitRef){
+        ArrayList<String> texts = db.getTextsString(activity.getName(), user.getName());
+        ArrayList<String> textsM = db.getImagesMarkerString(activity.getName(),user.getName());
+        ArrayList<Data> data = new ArrayList<>();
+        for (int i = 0; i < texts.size(); i++) {
+            data.add(new Data(textsM.get(i),texts.get(i)));
+        }
+        submitRef.child("texts").setValue(data);
+
+    }
+
+
     private void deleteData(){
         db.deleteData(activity.getName(),user.getName());
         db.deleteCoordinates(activity.getName(),user.getName());
@@ -282,6 +274,7 @@ public class ActivityActivity extends AppCompatActivity {
 
     private void sendFullActivity(){
         Firebase submitRef = sendActivity();
+        uploadTexts(submitRef);
         uploadImages(submitRef);
         uploadAudios(submitRef);
         deleteData();

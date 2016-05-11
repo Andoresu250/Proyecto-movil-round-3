@@ -11,6 +11,7 @@ import com.example.dell.round3.ApiImgur.imgurmodel.ImageResponse;
 import com.example.dell.round3.ApiImgur.imgurmodel.ImgurAPI;
 import com.example.dell.round3.ApiImgur.imgurmodel.Upload;
 import com.example.dell.round3.ApiImgur.utils.NetworkUtils;
+import com.example.dell.round3.FirebaseModels.Data;
 import com.firebase.client.Firebase;
 
 import retrofit.Callback;
@@ -30,7 +31,7 @@ public class UploadService {
         this.context = context;
     }
 
-    public void Execute(Upload upload, Callback<ImageResponse> callback, final Firebase ref, final int i) {
+    public void Execute(Upload upload, Callback<ImageResponse> callback, final Firebase ref, final int i, final String coordinate) {
         final Callback<ImageResponse> cb = callback;
 
         if (!NetworkUtils.isConnected(mContext.get())) {
@@ -68,7 +69,8 @@ public class UploadService {
                         if (imageResponse.success) {
                             notificationHelper.createUploadedNotification(imageResponse);
                             Firebase imageRef = ref.child("images");
-                            imageRef.child(i+"").setValue(imageResponse.data.link);
+                            Data data = new Data(coordinate,imageResponse.data.link);
+                            imageRef.child(i+"").setValue(data);
                         }
                     }
 

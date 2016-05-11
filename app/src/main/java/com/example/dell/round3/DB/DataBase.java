@@ -98,6 +98,22 @@ public class DataBase extends SQLiteOpenHelper {
         return datas;
     }
 
+    public ArrayList<String> getImagesMarkerString(String activityName, String UserName){
+        ArrayList<String> datas = new ArrayList<>();
+        String query = "SELECT * FROM " + TData.TABLE_NAME + " WHERE " +
+                TData.FIELD_ACTIVITY_NAME + " = " + "'" + activityName + "'" + " AND " +
+                TData.FIELD_USER_NAME + " = " + "'" + UserName + "'" + " AND " +
+                TData.FIELD_TYPE + " = " + "'imageM'"
+                ;
+        Cursor c = db.rawQuery(query,null);
+        if (c.moveToFirst()){
+            do {
+                datas.add(c.getString(2));
+            }while (c.moveToNext());
+        }
+        return datas;
+    }
+
     public ArrayList<TData> getAudiosMarker(String activityName, String UserName){
         ArrayList<TData> datas = new ArrayList<>();
         String query = "SELECT * FROM " + TData.TABLE_NAME + " WHERE " +
@@ -119,6 +135,22 @@ public class DataBase extends SQLiteOpenHelper {
         return datas;
     }
 
+    public ArrayList<String> getAudiosMarkerString(String activityName, String UserName){
+        ArrayList<String> datas = new ArrayList<>();
+        String query = "SELECT * FROM " + TData.TABLE_NAME + " WHERE " +
+                TData.FIELD_ACTIVITY_NAME + " = " + "'" + activityName + "'" + " AND " +
+                TData.FIELD_USER_NAME + " = " + "'" + UserName + "'" + " AND " +
+                TData.FIELD_TYPE + " = " + "'audioM'"
+                ;
+        Cursor c = db.rawQuery(query,null);
+        if (c.moveToFirst()){
+            do {
+                datas.add(c.getString(2));
+            }while (c.moveToNext());
+        }
+        return datas;
+    }
+
     public ArrayList<TData> getTextsMarker(String activityName, String UserName){
         ArrayList<TData> datas = new ArrayList<>();
         String query = "SELECT * FROM " + TData.TABLE_NAME + " WHERE " +
@@ -135,6 +167,22 @@ public class DataBase extends SQLiteOpenHelper {
                 data.setValue(c.getString(2));
                 data.setType(c.getString(3));
                 datas.add(data);
+            }while (c.moveToNext());
+        }
+        return datas;
+    }
+
+    public ArrayList<String> getTextsMarkerString(String activityName, String UserName){
+        ArrayList<String> datas = new ArrayList<>();
+        String query = "SELECT * FROM " + TData.TABLE_NAME + " WHERE " +
+                TData.FIELD_ACTIVITY_NAME + " = " + "'" + activityName + "'" + " AND " +
+                TData.FIELD_USER_NAME + " = " + "'" + UserName + "'" + " AND " +
+                TData.FIELD_TYPE + " = " + "'textM'"
+                ;
+        Cursor c = db.rawQuery(query,null);
+        if (c.moveToFirst()){
+            do {
+                datas.add(c.getString(2));
             }while (c.moveToNext());
         }
         return datas;

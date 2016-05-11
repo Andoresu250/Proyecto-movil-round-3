@@ -1,17 +1,17 @@
 package com.example.dell.round3.Activity;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.dell.round3.Activity.Adapters.ActivityAdapter;
 import com.example.dell.round3.FirebaseModels.Activity;
+import com.example.dell.round3.FirebaseModels.Submit;
 import com.example.dell.round3.Login.CurrentUser;
 import com.example.dell.round3.R;
 import com.firebase.client.DataSnapshot;
@@ -39,7 +39,6 @@ public class ActivitiesActivity extends AppCompatActivity {
         root = new Firebase(firebaseUrl);
         activitiesList = (ListView) findViewById(R.id.activiesListLV);
         loadActivities();
-        System.out.println(">>>>" + currentUser.getType());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if(isProfessor()){
@@ -61,7 +60,10 @@ public class ActivitiesActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 if(isProfessor()){
-                    //TODO: colocar la vista de los submits
+                    Intent professorIntent = new Intent(ActivitiesActivity.this, ViewActivitiesActivity.class);
+                    professorIntent.putExtra("activity", (Activity)view.getTag());
+                    startActivity(professorIntent);
+
                 }else{
                     Intent studentIntent = new Intent(ActivitiesActivity.this, ActivityActivity.class);
                     studentIntent.putExtra("activity", (Activity)view.getTag());
@@ -69,8 +71,6 @@ public class ActivitiesActivity extends AppCompatActivity {
                 }
             }
         });
-
-        //TODO: Set onclickListener para cada elemento deel listView y mostrar dependiendo del tipo de usuario
 
     }
 
@@ -87,6 +87,11 @@ public class ActivitiesActivity extends AppCompatActivity {
                     activity.setLongitude(Double.parseDouble(fbActivity.child("longitude").getValue().toString()));
                     activity.setRadius(Double.parseDouble(fbActivity.child("radius").getValue().toString()));
                     activity.setNote(fbActivity.child("note").getValue().toString());
+                    ArrayList<Submit> submits = new ArrayList<Submit>();
+                    for(DataSnapshot submit : fbActivity.child("submits").getChildren()){
+                        submits.add(submit.getValue(Submit.class));
+                    }
+                    activity.setSubmits(submits);
                     activities.add(activity);
                 }
                 ActivityAdapter adapter = new ActivityAdapter(activities, ActivitiesActivity.this);

@@ -29,14 +29,10 @@ public class TextDialog extends DialogFragment {
         activity = (Activity) args.getSerializable("activity");
         user = new CurrentUser(getActivity().getApplicationContext());
 
-        // Use the Builder class for convenient dialog construction
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Nuevo Texto");
-        // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
         final View view = inflater.inflate(R.layout.dialog_text, null);
         builder.setView(view)
                 // Add action buttons
@@ -55,11 +51,10 @@ public class TextDialog extends DialogFragment {
                         })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        //Toast.makeText(getActivity(), "No", Toast.LENGTH_SHORT).show();
+
                     }
                 });
 
-        // Create the AlertDialog object and return it
         return builder.create();
     }
 }

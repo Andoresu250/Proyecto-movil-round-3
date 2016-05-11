@@ -15,7 +15,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -43,7 +43,9 @@
             android:name=".Activity.ActivitiesActivity"
             android:label="@string/title_activity_activities"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activity.NewActivity"></activity>
+        <activity android:name=".Activity.NewActivity" />
+        <activity android:name=".Activity.ViewActivitiesActivity" />
+        <activity android:name=".Activity.ViewActivityActivity"></activity>
     </application>
 
 </manifest>

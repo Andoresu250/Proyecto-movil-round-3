@@ -1,4 +1,4 @@
-package com.example.dell.round3.Activity;
+package com.example.dell.round3.Activity.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -48,6 +48,9 @@ public class ActivityAdapter extends BaseAdapter {
             view = inflater.inflate(R.layout.row_activity, null);
         }
         TextView nameTV = (TextView) view.findViewById(R.id.activityNameTV);
+        if(activity.getName() == null){
+            System.out.println(">>>>>NULL");
+        }
         nameTV.setText(activity.getName());
         TextView noteTV = (TextView) view.findViewById(R.id.activityNoteTV);
         noteTV.setText(activity.getNote());

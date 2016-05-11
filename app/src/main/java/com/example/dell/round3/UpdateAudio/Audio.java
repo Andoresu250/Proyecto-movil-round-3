@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.media.MediaPlayer;
 import android.util.Log;
 
+import com.example.dell.round3.FirebaseModels.Data;
 import com.firebase.client.Firebase;
 
 import java.io.DataOutputStream;
@@ -25,7 +26,7 @@ public class Audio implements MediaPlayer.OnPreparedListener  {
     MediaPlayer mp;
 
 
-    public String uploadFile(final String selectedFilePath, Dialog dialog, Firebase ref, int i) {
+    public String uploadFile(final String selectedFilePath, Dialog dialog, Firebase ref, int i, String coordinate) {
         int serverResponseCode = 0;
         String finalurl = "";
         HttpURLConnection connection;
@@ -110,7 +111,8 @@ public class Audio implements MediaPlayer.OnPreparedListener  {
                 if (serverResponseCode == 200) {
                     finalurl = "http://www.coderefer.com/extras/uploads/" + fileName;
                     Firebase imageRef = ref.child("audios");
-                    imageRef.child(i+"").setValue(finalurl);
+                    Data data = new Data(coordinate, finalurl);
+                    imageRef.child(i+"").setValue(data);
                     dialog.dismiss();
                 }
 

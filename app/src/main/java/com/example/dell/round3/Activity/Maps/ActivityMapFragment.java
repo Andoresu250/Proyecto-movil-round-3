@@ -50,9 +50,6 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
     private Activity activity;
     private LatLng activityLatLng;
     public CurrentUser user;
-    private boolean firstDraw;
-
-    String[] types = {"image","text","audio"};
 
     private final int[] MAP_TYPES = {GoogleMap.MAP_TYPE_SATELLITE,
             GoogleMap.MAP_TYPE_NORMAL,
@@ -81,7 +78,6 @@ public class ActivityMapFragment extends MapFragment implements GoogleApiClient.
         //getActivity().getApplicationContext().deleteDatabase(DataBase.DB_NAME);
         db = new DataBase(getActivity().getApplicationContext());
         user = new CurrentUser(getActivity().getApplicationContext());
-        firstDraw = true;
     }
 
     @Override
