@@ -1,9 +1,11 @@
 <resources>
-    <string name="app_name">Round 3</string>
+    <string name="app_name">Taggealo!</string>
     <string name="google_maps_key">AIzaSyD_f866n1ngYyXsS-ywviKPtnfiZuHG7Hw</string>
     <string name="notification_fail">Envio Fallido...</string>
     <string name="notification_share_link">Share link</string>
     <string name="notifaction_success">Subida exitosa</string>
     <string name="notification_progress">Enviando imagenes...</string>
-    <string name="title_activity_activities">ActivitiesActivity</string>
+    <string name="title_activity_activities">Lista de actividades</string>
+    <string name="title_activity_new">Nueva Actividad</string>
+    <string name="title_activity_submits">Envios de estudiastes</string>
 </resources>

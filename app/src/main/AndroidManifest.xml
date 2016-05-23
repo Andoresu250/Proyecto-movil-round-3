@@ -43,8 +43,10 @@
             android:name=".Activity.ActivitiesActivity"
             android:label="@string/title_activity_activities"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activity.NewActivity" />
-        <activity android:name=".Activity.ViewActivitiesActivity" />
+        <activity android:name=".Activity.NewActivity"
+             />
+        <activity android:name=".Activity.ViewActivitiesActivity"
+             />
         <activity android:name=".Activity.ViewActivityActivity"></activity>
     </application>
 

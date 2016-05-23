@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
+import android.widget.Button;
 import android.widget.SeekBar;
 
 import com.example.dell.round3.R;
@@ -159,6 +160,8 @@ public class NewActivityMap extends MapFragment implements GoogleApiClient.Conne
 
         markLatLng = latLng;
         SeekBar radiusSeekBar = (SeekBar) getActivity().findViewById(R.id.radiusSeekBar);
+        Button sendBrn = (Button) getActivity().findViewById(R.id.createActivityBtn);
+        sendBrn.setEnabled(true);
         radiusSeekBar.setEnabled(true);
         int radius = radiusSeekBar.getProgress();
         changeRadius(radius);

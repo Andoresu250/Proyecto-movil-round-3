@@ -33,16 +33,20 @@ public class AudioDialog extends DialogFragment {
         final View view = inflater.inflate(R.layout.dialog_audio, null);
         ImageButton playBtn = (ImageButton) view.findViewById(R.id.playBtn);
         ImageButton stopBtn = (ImageButton) view.findViewById(R.id.pauseBtn);
+        playBtn.setVisibility(View.INVISIBLE);
+        stopBtn.setVisibility(View.INVISIBLE);
+        dialog = ProgressDialog.show(getContext(), "", "Descargando Audio...", true);
+        System.out.println(">>>> Descargando");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                audio.reproduce(audioUrl, dialog, view);
+            }
+        }).start();
         playBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog = ProgressDialog.show(getContext(), "", "Descargando Audio...", true);
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        audio.reproduce(audioUrl, dialog);
-                    }
-                }).start();
+                audio.start();
             }
         });
         stopBtn.setOnClickListener(new View.OnClickListener() {
@@ -58,7 +62,6 @@ public class AudioDialog extends DialogFragment {
 
                     }
                 });
-
         return builder.create();
     }
 }

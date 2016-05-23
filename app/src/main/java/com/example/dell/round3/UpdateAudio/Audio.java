@@ -3,8 +3,12 @@ package com.example.dell.round3.UpdateAudio;
 import android.app.Dialog;
 import android.media.MediaPlayer;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 
 import com.example.dell.round3.FirebaseModels.Data;
+import com.example.dell.round3.R;
 import com.firebase.client.Firebase;
 
 import java.io.DataOutputStream;
@@ -139,7 +143,7 @@ public class Audio implements MediaPlayer.OnPreparedListener  {
 
     public void pause() { mp.pause(); }
 
-    public void reproduce(String urlSong, Dialog dialog) {
+    public void reproduce(String urlSong, Dialog dialog, View view) {
         URL url = null;
         try {
             url = new URL(urlSong);
@@ -164,6 +168,11 @@ public class Audio implements MediaPlayer.OnPreparedListener  {
             } catch (OutOfMemoryError e) {
             }
         dialog.dismiss();
+        ImageButton playBtn = (ImageButton) view.findViewById(R.id.playBtn);
+        ImageButton stopBtn = (ImageButton) view.findViewById(R.id.pauseBtn);
+        playBtn.setVisibility(View.VISIBLE);
+        stopBtn.setVisibility(View.VISIBLE);
+        System.out.println(">>>> Termino descarga");
     }
 
 

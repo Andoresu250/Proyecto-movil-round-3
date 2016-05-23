@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.dell.round3.Activity.ActivitiesActivity">
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="Configurar envio de actividades"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/logOutBtn"
+        android:orderInCategory="100"
+        android:title="Cerrar Sesion"
+        app:showAsAction="never" />
+</menu>

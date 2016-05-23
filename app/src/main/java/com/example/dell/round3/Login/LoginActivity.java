@@ -24,8 +24,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText edtLPassword;
     private String url = "https://proyecto-movil.firebaseio.com/";
     Firebase rootUrl;
-
-    //ESTA ES LA CLASE QUE MANTIENE LA SESION DEL USUARIO
     private CurrentUser currentUser;
 
 
@@ -36,6 +34,9 @@ public class LoginActivity extends AppCompatActivity {
         Firebase.setAndroidContext(this);
         rootUrl = new Firebase(url);
         currentUser = new CurrentUser(this);
+        if(!currentUser.getUser().equals("Users")){
+            start();
+        }
     }
 
 
@@ -51,28 +52,18 @@ public class LoginActivity extends AppCompatActivity {
                     try {
                         String text = new String(data, "UTF-8");
                         if (text.equals(edtLPassword.getText().toString())) {
-                            //TODO: cambiar este "entro"
-                            //TODO: login automatico
-                            Toast toast1 = Toast.makeText(getApplicationContext(), "entro", Toast.LENGTH_SHORT);
-                            toast1.show();
                             currentUser.setUser(edtLUser.getText().toString());
                             currentUser.setType(dataSnapshot.child("Type").getValue().toString());
                             currentUser.setName(dataSnapshot.child("Name").getValue().toString());
                             start();
-
                         } else  {
-                            // AQUI ENTRA SI EL USERNAME ESTA CORRECTO PERO LA CONTRASEÑA NO
-                            Toast toast1 = Toast.makeText(getApplicationContext(), "contraseña invalida", Toast.LENGTH_SHORT);
-                            toast1.show();
+                            Toast.makeText(getApplicationContext(), "Contraseña invalida", Toast.LENGTH_SHORT).show();
                         }
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     }
-
                 } else {
-                    // Y AQUI ESTA SI EL USUARIO NO EXISTE
-                    Toast toast1 = Toast.makeText(getApplicationContext(), "no entro", Toast.LENGTH_SHORT);
-                    toast1.show();
+                    Toast.makeText(getApplicationContext(), "El nombre de usuario no existe", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -84,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-    // ESTO SOLO MANDA A LA VISTA DE REGISTRO
+
     public void btnSignUp(View view) {
        viewRegister();
     }
@@ -97,5 +88,6 @@ public class LoginActivity extends AppCompatActivity {
     private void start(){
         Intent i = new Intent(this, ActivitiesActivity.class);
         startActivity(i);
+        finish();
     }
 }

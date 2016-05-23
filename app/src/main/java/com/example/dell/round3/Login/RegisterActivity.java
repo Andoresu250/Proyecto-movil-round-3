@@ -68,8 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
                     rootUrl.child("Users").child(edtRUser.getText().toString()).setValue(post1);
                     finish();
                 } else {
-                    Toast toast1 = Toast.makeText(getApplicationContext(), "ya existe user", Toast.LENGTH_SHORT);
-                    toast1.show();
+                    Toast.makeText(getApplicationContext(), "Este nombre de usuario ya existe", Toast.LENGTH_SHORT).show();
                 }
             }
 

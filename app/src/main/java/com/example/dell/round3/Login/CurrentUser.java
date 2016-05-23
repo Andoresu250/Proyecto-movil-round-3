@@ -8,6 +8,7 @@ public class CurrentUser {
     private final String KEY_USER = "Users";
     private final String KEY_NAME = "Name";
     private final String KEY_TYPE = "Nothing";
+    private final String KEY_ACTIVATE = "Activate";
 
     private Context mContext;
 
@@ -32,6 +33,8 @@ public class CurrentUser {
         return getSettings().getString(KEY_NAME, null);
     }
 
+    public boolean getActivate() {return  getSettings().getBoolean(KEY_ACTIVATE, false);};
+
     public void setUser(String user){
         SharedPreferences.Editor editor = getSettings().edit();
         editor.putString(KEY_USER, user);
@@ -49,4 +52,11 @@ public class CurrentUser {
         editor.putString(KEY_NAME, name);
         editor.commit();
     }
+
+    public void setActivate(Boolean sw){
+        SharedPreferences.Editor editor = getSettings().edit();
+        editor.putBoolean(KEY_ACTIVATE,sw);
+        editor.commit();
+    }
+
 }

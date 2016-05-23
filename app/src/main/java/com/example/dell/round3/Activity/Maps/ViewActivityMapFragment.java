@@ -3,7 +3,6 @@ package com.example.dell.round3.Activity.Maps;
 
 
 import android.Manifest;
-import android.app.FragmentManager;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -13,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
-
 import com.example.dell.round3.Dialogs.AudioDialog;
 import com.example.dell.round3.Dialogs.ImageDialog;
 import com.example.dell.round3.Dialogs.ShowTextDialog;
@@ -214,6 +212,9 @@ public class ViewActivityMapFragment extends MapFragment implements GoogleApiCli
     public boolean onMarkerClick(Marker marker) {
         String title = marker.getTitle();
         if(title.contains("http://i.imgur.com/")){
+
+
+
             Bundle args = new Bundle();
             args.putSerializable("url", title);
             DialogFragment dialog = new ImageDialog();

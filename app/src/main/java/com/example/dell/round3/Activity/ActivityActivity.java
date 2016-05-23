@@ -144,7 +144,7 @@ public class ActivityActivity extends AppCompatActivity {
         buttonUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isConnectedViaWifi()) {
+                if (isConnectedViaWifi() || user.getActivate()) {
                     // Your code here
                     Toast.makeText(ActivityActivity.this, "Enviando...", Toast.LENGTH_SHORT).show();
                     sendFullActivity();

@@ -3,16 +3,21 @@ package com.example.dell.round3.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.dell.round3.Activity.Adapters.ActivityAdapter;
+import com.example.dell.round3.Dialogs.ConfigurationDialog;
 import com.example.dell.round3.FirebaseModels.Activity;
 import com.example.dell.round3.FirebaseModels.Submit;
 import com.example.dell.round3.Login.CurrentUser;
+import com.example.dell.round3.Login.LoginActivity;
 import com.example.dell.round3.R;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -32,10 +37,10 @@ public class ActivitiesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activities);
-        Firebase.setAndroidContext(this);
-        currentUser = new CurrentUser(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Firebase.setAndroidContext(this);
+        currentUser = new CurrentUser(this);
         root = new Firebase(firebaseUrl);
         activitiesList = (ListView) findViewById(R.id.activiesListLV);
         loadActivities();
@@ -103,6 +108,34 @@ public class ActivitiesActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if(id == R.id.action_settings){
+
+            DialogFragment dialog = new ConfigurationDialog();
+            dialog.show(getSupportFragmentManager(),"dialog");
+
+        }
+        if(id == R.id.logOutBtn){
+            currentUser.setUser("Users");
+            currentUser.setType("Nothing");
+            Intent intent = new Intent(ActivitiesActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private boolean isProfessor(){
